@@ -36,7 +36,7 @@ End Function
 Sub listModulesInOtherWKBK(nused As String)
     Dim otherPath As String: otherPath = BrowseFilePath(D_EXCEL_MACRO)
     
-    If otherPath = ThisWorkbook.Path & "\" & ThisWorkbook.name Then
+    If otherPath = ThisWorkbook.Path & "\" & ThisWorkbook.Name Then
         MsgBox "The workbook can't be this workbook."
         End
     End If
@@ -50,18 +50,18 @@ Sub listModulesInOtherWKBK(nused As String)
 End Sub
 
 
-Sub listModulesInThisWKBK()
-    Call ListModulesInWKBK(ThisWorkbook)
-    Call displayAMode(C_ThisWorkbook)
-End Sub
+'Sub listModulesInThisWKBK()
+'    Call ListModulesInWKBK(ThisWorkbook)
+'    Call displayAMode(C_ThisWorkbook)
+'End Sub
 
 
 Sub ListModulesInWKBK(aWKBK As Workbook)
 
-ThisWorkbook.Sheets("VersionControl").Cells(9, 8).Value = aWKBK.Path & "\" & aWKBK.name
+ThisWorkbook.Sheets("VersionControl").Cells(9, 8).Value = aWKBK.Path & "\" & aWKBK.Name
 
 Dim modulePathName As String
-modulePathName = CreateObject("WScript.Shell").SpecialFolders("Desktop") & "\" & Left(aWKBK.name, Len(aWKBK.name) - 5) & "_Modules"
+modulePathName = CreateObject("WScript.Shell").SpecialFolders("Desktop") & "\" & Left(aWKBK.Name, Len(aWKBK.Name) - 5) & "_Modules"
 
 Dim theHData As HeaderDataObject
 Set theHData = getModuleHeaderObjectFromWKBK(aWKBK, modulePathName)
@@ -73,6 +73,8 @@ End Sub
 
 
 Sub giveModulesToNewWKBK()
+
+MsgBox "Needs work"
 
 If getDisplayMode = B_TwoLists Then
 Else
@@ -103,7 +105,9 @@ End Sub
 
 Sub RemoveModulesFromWKBK()
 
-If ThisWorkbook.Sheets("VersionControl").Cells(9, 8).Value = ThisWorkbook.Path & "\" & ThisWorkbook.name Then
+MsgBox "Needs some working on"
+
+If ThisWorkbook.Sheets("VersionControl").Cells(9, 8).Value = ThisWorkbook.Path & "\" & ThisWorkbook.Name Then
     MsgBox "Cannot run on self": Exit Sub
 End If
 

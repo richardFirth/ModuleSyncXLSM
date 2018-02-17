@@ -66,7 +66,7 @@ Public Function ExportVBAModulesToPaths(theModules As Collection, thePath As Str
     
     For Each aModule In theModules
         ReDim Preserve locExportPaths(1 To n) As String
-        locExportPaths(n) = thePath & "\" & aModule.name & getModuleExtention(aModule)
+        locExportPaths(n) = thePath & "\" & aModule.Name & getModuleExtention(aModule)
         aModule.Export locExportPaths(n)
         n = n + 1
     Next aModule
@@ -79,7 +79,7 @@ exportModulesProblem:
     Dim errDat(1 To 4) As String
     errDat(1) = thePath
     errDat(2) = n
-    errDat(3) = aModule.name & getModuleExtention(aModule)
+    errDat(3) = aModule.Name & getModuleExtention(aModule)
     errDat(4) = locExportPaths(n)
     Call reportError("ExportVBAModulesToPaths", errDat)
     Resume Next
@@ -89,7 +89,7 @@ End Function
 Public Function ExportVBAModuleToPath(theModule As VBIDE.VBComponent, thePath As String) As String
         Dim locExportPath As String
     On Error GoTo exportProblem
-        locExportPath = thePath & "\" & theModule.name & getModuleExtention(theModule)
+        locExportPath = thePath & "\" & theModule.Name & getModuleExtention(theModule)
         theModule.Export locExportPath
         ExportVBAModuleToPath = locExportPath
 

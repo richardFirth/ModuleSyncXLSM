@@ -58,7 +58,7 @@ Function getModuleByName(theCol As Collection, moduleName As String) As VBIDE.VB
     If moduleName = "" Then Exit Function
 
     For Each locMod In theCol
-       If moduleName = locMod.name Then Set getModuleByName = locMod
+       If moduleName = locMod.Name Then Set getModuleByName = locMod
     Next locMod
     
 End Function
@@ -105,7 +105,7 @@ Function ModuleCollection2String(theCollection As Collection) As String()
     
     For Each VBComp In theCollection
        ReDim Preserve locSTR(1 To n) As String
-       locSTR(n) = VBComp.name
+       locSTR(n) = VBComp.Name
        n = n + 1
     Next VBComp
     ModuleCollection2String = locSTR

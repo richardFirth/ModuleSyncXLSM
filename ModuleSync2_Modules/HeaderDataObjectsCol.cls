@@ -21,11 +21,33 @@ End Sub
 Public Sub setTotalPaths(tPaths() As String)
     totalPaths = tPaths
 End Sub
+
+
+
+
 Public Function getTotalPaths() As String()
-    getTotalPaths = totalPaths
+    Dim tPaths() As String
+    
+    Dim myHD As HeaderDataObject
+    For Each myHD In theHeaderDataObjects
+        tPaths = AddToStringArray(tPaths, nameFromPath(myHD.getWKBKPath))
+    Next myHD
+
+    getTotalPaths = tPaths
 End Function
 
 
+Public Function getPathsWithData() As String()
+    Dim PathsWData() As String
+    
+    Dim myHD As HeaderDataObject
+    For Each myHD In theHeaderDataObjects
+        PathsWData = AddToStringArray(PathsWData, myHD.getWKBKDataForDisplay)
+    Next myHD
+
+    getPathsWithData = PathsWData
+
+End Function
 
 
 
@@ -104,7 +126,6 @@ Private Sub getNewestVersions()
     Dim ids() As String
     ids = getUniqueID(newestData)
     
-    
     Dim x As Integer
     Dim bestVersions() As HeaderData
     Dim n As Integer: n = 1
@@ -170,7 +191,9 @@ BADNewerVersion:
         
         Dim midArr() As String
         
-        For x = LBound(Arr) To UBound(Arr)
+        If Not HeaderDataHasStuff(Arr) Then GoTo getUniqueIDError:
+        
+        For x = LBound(Arr) To UBound(Arr) ' error here
         If Arr(x).H_ID <> "" Then
             ReDim Preserve midArr(1 To n) As String
             midArr(n) = Arr(x).H_ID
@@ -179,5 +202,10 @@ BADNewerVersion:
         Next x
 
         getUniqueID = removeDupesStringArray(midArr)
+    Exit Function
+getUniqueIDError:
+Dim errSTR(1 To 2) As String
+errSTR(1) = "ERR"
+       Call reportError("getUniqueID", errSTR)
     
     End Function

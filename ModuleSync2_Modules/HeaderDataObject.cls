@@ -20,43 +20,55 @@ Private modulesFolderPath As String
 
 Private oldVersionsFlagged As Boolean
 
+Public Sub setModulesFolderPath(thePath As String):    modulesFolderPath = thePath: End Sub
+
+Public Sub setWKBKPath(thePath As String):    WkbkPath = thePath: End Sub
+Public Function getWKBKPath() As String:    getWKBKPath = WkbkPath: End Function
+
+Public Sub setHeader(theD() As HeaderData):    myData = theD: End Sub
+Public Function getHeader() As HeaderData():    getHeader = myData: End Function
 
 
-Public Sub setModulesFolderPath(thePath As String)
-    modulesFolderPath = thePath
-End Sub
-
-Public Sub setWKBKPath(thePath As String)
-    WkbkPath = thePath
-End Sub
-
-Public Sub setHeader(theD() As HeaderData)
-    myData = theD
-End Sub
-
-
-
-
-Public Function getWKBKPath() As String
-    getWKBKPath = WkbkPath
+Public Function getWKBKDataForDisplay() As String
+    getWKBKDataForDisplay = "Mods to Update: " & getNumberOfOutdatedModues & getNewModues
 End Function
 
-Public Function getHeader() As HeaderData()
-    getHeader = myData
+
+
+Private Function getNumberOfOutdatedModues() As Integer
+    Dim x As Integer: Dim n As Integer
+    For x = LBound(myData) To UBound(myData)
+        If myData(x).G_OldVersion Then
+            n = n + 1
+        End If
+    Next x
+getNumberOfOutdatedModues = n
 End Function
+
+Private Function getNewModues() As String
+    Dim x As Integer
+    Dim tResult As String
+    For x = LBound(myData) To UBound(myData)
+        If myData(x).I_newModule Then
+            tResult = tResult & "!"
+        End If
+    Next x
+getNewModues = " " & tResult
+End Function
+
+
+
+
 
 Public Function getSize() As Integer
      If HeaderDataHasStuff(myData) Then getSize = UBound(myData)
 End Function
 
-
 Public Function getIDS() As String()
     Dim tID() As String
     Dim x As Integer
     Dim n As Integer: n = 1
-    
     If Not HeaderDataHasStuff(myData) Then Exit Function
-    
     For x = LBound(myData) To UBound(myData)
         If myData(x).E_Vcontrol Then
             ReDim Preserve tID(1 To n) As String
@@ -70,9 +82,7 @@ End Function
 
 Public Function FlagNewIDS(currentIDList() As String)
     Dim tID() As String
-    
     Dim x As Integer
-    
     If Not HeaderDataHasStuff(myData) Then Exit Function
     
     For x = LBound(myData) To UBound(myData)
@@ -80,11 +90,7 @@ Public Function FlagNewIDS(currentIDList() As String)
             If myData(x).E_Vcontrol Then myData(x).I_newModule = True
         End If
     Next
-
 End Function
-
-
-
 
 Public Sub updateToNewest()
     If Not oldVersionsFlagged Then Exit Sub
@@ -100,45 +106,28 @@ Public Sub updateToNewest()
     For x = LBound(myData) To UBound(myData)
         If myData(x).G_OldVersion Then
            If RemoveModuleFromWKBKByName(myWKBK, myData(x).A_Name) Then
-              Call ImportModuleToWKBK(myWKBK, modulePathGivenID(myData(x).H_ID))
+              Call ImportModuleToWKBK(myWKBK, NewestModulePathGivenID(myData(x).H_ID))
               hasChanged = True
            End If
         End If
     Next x
     
-    If hasChanged Then
-        Call myWKBK.Close(True)
-    Else
-        Call myWKBK.Close(False)
-    End If
+    Call myWKBK.Close(hasChanged)
+
 End Sub
 
 
-Private Function modulePathGivenID(theID As String) As String
-
+Private Function NewestModulePathGivenID(theID As String) As String
     Dim x As Integer
-    
     For x = LBound(myNewestData) To UBound(myNewestData)
-        If myNewestData(x).H_ID = theID Then modulePathGivenID = myNewestData(x).F_ModulePath: Exit Function
+        If myNewestData(x).H_ID = theID Then NewestModulePathGivenID = myNewestData(x).F_ModulePath: Exit Function
     Next x
-
 End Function
-
-
-
-
-
-
-
-
-
 
 Public Sub validateTheHeaders(tNewData() As HeaderData)
 
 Dim x As Integer
-
 If HeaderDataHasStuff(myData) Then
-
     For x = LBound(myData) To UBound(myData)
         If myData(x).E_Vcontrol Then
             If Not testForNewest(myData(x), tNewData) Then
@@ -146,7 +135,6 @@ If HeaderDataHasStuff(myData) Then
             End If
         End If
     Next x
-    
 End If
     myNewestData = tNewData
     oldVersionsFlagged = True
@@ -165,42 +153,32 @@ Private Function testForNewest(theH As HeaderData, newestData() As HeaderData) A
     
 End Function
 
-
-
-
 Public Sub printHeaderToColumn(theSheet As Worksheet, theCol As Integer, theRow As Integer)
     
     Dim x As Long: Dim n As Long
     n = theRow + 1
     With theSheet
-    
     .Cells(theRow, theCol).Value = nameFromPath(WkbkPath)
     .Cells(theRow, theCol + 1).Value = "Module Path"
     .Cells(theRow, theCol + 2).Value = "Major V"
     .Cells(theRow, theCol + 3).Value = "Minor V"
     .Cells(theRow, theCol + 4).Value = "ID"
-
-     .Range(.Cells(theRow, theCol), .Cells(theRow, theCol + 4)).Interior.Color = getRFColor(T_Grey)
+    .Range(.Cells(theRow, theCol), .Cells(theRow, theCol + 4)).Interior.Color = getRFColor(T_Grey)
      
-     If HeaderDataHasStuff(myData) Then
-
-        For x = LBound(myData) To UBound(myData)
-           ' If theArr(x).E_Vcontrol Then
-             .Cells(n, theCol).Value = myData(x).A_Name
-             .Cells(n, theCol + 1).Value = myData(x).F_ModulePath
-             .Cells(n, theCol + 2).Value = myData(x).B_MajorVersion
-             .Cells(n, theCol + 3).Value = myData(x).C_MinorVersion
-             .Cells(n, theCol + 4).Value = myData(x).H_ID
-             If myData(x).E_Vcontrol Then .Range(.Cells(n, theCol), .Cells(n, theCol + 4)).Interior.Color = getRFColor(B_Green)
-             If myData(x).G_OldVersion Then .Range(.Cells(n, theCol), .Cells(n, theCol + 4)).Interior.Color = getRFColor(A_Red)
-             If myData(x).I_newModule Then .Range(.Cells(n, theCol), .Cells(n, theCol + 4)).Interior.Color = getRFColor(D_Blue)
-             n = n + 1
-            'End If
-        Next x
-    
-    End If
-    
+         If HeaderDataHasStuff(myData) Then
+            For x = LBound(myData) To UBound(myData)
+               ' If theArr(x).E_Vcontrol Then
+                 .Cells(n, theCol).Value = myData(x).A_Name
+                 .Cells(n, theCol + 1).Value = myData(x).F_ModulePath
+                 .Cells(n, theCol + 2).Value = myData(x).B_MajorVersion
+                 .Cells(n, theCol + 3).Value = myData(x).C_MinorVersion
+                 .Cells(n, theCol + 4).Value = myData(x).H_ID
+                 If myData(x).E_Vcontrol Then .Range(.Cells(n, theCol), .Cells(n, theCol + 4)).Interior.Color = getRFColor(B_Green)
+                 If myData(x).G_OldVersion Then .Range(.Cells(n, theCol), .Cells(n, theCol + 4)).Interior.Color = getRFColor(A_Red)
+                 If myData(x).I_newModule Then .Range(.Cells(n, theCol), .Cells(n, theCol + 4)).Interior.Color = getRFColor(D_Blue)
+                 n = n + 1
+                'End If
+            Next x
+        End If
     End With
-    
-    
 End Sub

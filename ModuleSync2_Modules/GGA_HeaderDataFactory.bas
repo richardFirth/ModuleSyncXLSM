@@ -71,7 +71,7 @@ Dim myD As New HeaderDataObject
     modulePaths() = ExportVBAModulesToPaths(thisCollection, theFolderName)
     
     Call myD.setHeader(getHeaders(modulePaths))
-    Call myD.setWKBKPath(theWKBK.Path & "\" & theWKBK.name)
+    Call myD.setWKBKPath(theWKBK.Path & "\" & theWKBK.Name)
     Call myD.setModulesFolderPath(theFolderName)
      
     Set getModuleHeaderObjectFromWKBK = myD

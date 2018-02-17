@@ -1,6 +1,6 @@
 Attribute VB_Name = "ZZZ_GenericUseful_2"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.5
+'$*MINOR_VERSION*1.6
 '$*DATE*15Feb18
 '$*ID*GenericUseful
 
@@ -21,16 +21,31 @@ Attribute VB_Name = "ZZZ_GenericUseful_2"
 
 Option Explicit
 
+  '  Dim x As Integer
+  '  For x = LBound(tErrData) To UBound(tErrData)
+  '
+  '  Next x
+
+
+   ' Dim x As Integer
+   ' Dim n As Integer: n = 1
+   ' For x = LBound(tErrData) To UBound(tErrData)
+   '     ReDim Preserve something(1 To n) As String
+   '     something(n) = ""
+   '     n = n + 1
+   ' Next x
+    
+
 
 
 Public Sub reportError(functionName As String, tStr() As String)
-    Dim myERR() As String
+    Dim myErr() As String
     Dim repDat(1 To 2) As String
     repDat(1) = functionName
     repDat(2) = Now
-    myERR = ConcatenateArrays(repDat, tStr)
+    myErr = ConcatenateArrays(repDat, tStr)
 
-    Call appendAsRowToCSV(ThisWorkbook.Path & "\errLog.csv", myERR)
+    Call appendAsRowToCSV(ThisWorkbook.Path & "\errLog.csv", myErr)
 End Sub
 
 
