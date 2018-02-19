@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ModuleUpdater 
    Caption         =   "Module Updater"
-   ClientHeight    =   5205
+   ClientHeight    =   5208
    ClientLeft      =   120
    ClientTop       =   468
    ClientWidth     =   10728
@@ -40,6 +40,10 @@ Public Sub initialSetup()
 End Sub
 
 
+
+Private Sub closeButton_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    UI_OPEN = False
+End Sub
 
 Private Sub useDefaultList_Click()
     
@@ -93,6 +97,7 @@ End Sub
 
 Private Sub closeButton_Click()
     If EraseExported.Value Then Call EraseExportedFolder
+    UI_OPEN = False
     Me.Hide
 End Sub
 
