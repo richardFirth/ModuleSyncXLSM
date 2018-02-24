@@ -16,18 +16,12 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-
-
-
 Private myModuleCollection As ModuleVersionDataObjectsCol ' ModuleVersionDataObjectCollection object present
 Private myDualListbox As UIUX_DualListBox_1
 
-
 Private modSyncList() As String ' list of modules to sync
 
-
 Public Sub initialSetup()
-    EraseExported.Value = True
     
     If Not FileThere(ThisWorkbook.Path & "\ModSyncList.txt") Then
         MsgBox "No Default list exists, creating example in this folder to get you started"
@@ -44,7 +38,6 @@ Public Sub initialSetup()
     End If
 
 End Sub
-
 
 Private Sub CompareVersions_Click()
     Call compareWithVersons(modSyncList)
@@ -83,10 +76,8 @@ Call complexRoutineStart("")
     Set myModuleCollection = createHeaderObjectsCollection(totalPaths)
     Call myModuleCollection.identifyAllOldModules
     Call myModuleCollection.displayHeaderObjectData(ThisWorkbook.Sheets("VersionControl"))
-    
     Set myDualListbox = New UIUX_DualListBox_1
     Call myDualListbox.initializeDualList(ListBox1, ListBox2)
-    
     Call refreshListBoxes
     
     UpdateButton.Enabled = True
@@ -95,24 +86,10 @@ Call complexRoutineEnd("")
     
 End Sub
 
-
-
-
-
-
-
-
-
-
-
-
-
 Private Sub ListBox1_Click()
 If myDualListbox Is Nothing Then Exit Sub
 myDualListbox.refreshSubmenu
 End Sub
-
-
 
 
 Private Sub useDefaultList_Click()
@@ -170,12 +147,6 @@ Call complexRoutineEnd("")
  
 End Sub
 
-
-
-
-
-
-
 Private Sub refreshListBoxes()
     Dim totN() As String: totN = myModuleCollection.getTotalNames
     Dim y As Integer
@@ -187,15 +158,11 @@ Private Sub refreshListBoxes()
     myDualListbox.displayData
 End Sub
 
-
-
 ' /================================\
 ' |accept reject buttons           |
 ' \================================/
 
-
 Private Sub AcceptMod_Click()
-    
     Call AcceptRejectModChanges(True)
 End Sub
 
@@ -236,13 +203,9 @@ Private Sub AcceptRejectWKBKChanges(acceptCh As Boolean)
     Call refreshListBoxes
 End Sub
 
-
-
-
 ' /===========================\
 ' |closing workbook           |
 ' \===========================/
-
 
 Private Sub closeButton_Click()
     Call closeSequence
@@ -256,7 +219,7 @@ End Sub
 
 Private Sub closeSequence()
     Call clearWorkSpace(ThisWorkbook.Sheets(1), 1, 5)
-    If EraseExported.Value Then Call EraseExportedFolder
+    If Not StoreFilesOnDesktop Then Call EraseExportedFolder
     UI_OPEN = False
 End Sub
 

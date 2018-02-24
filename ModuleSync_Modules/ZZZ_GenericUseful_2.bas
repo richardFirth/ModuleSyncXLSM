@@ -1,6 +1,6 @@
 Attribute VB_Name = "ZZZ_GenericUseful_2"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.6
+'$*MINOR_VERSION*1.7
 '$*DATE*15Feb18
 '$*ID*GenericUseful
 '$*CharCount*5036*xxxx
@@ -37,6 +37,9 @@ Option Explicit
 '     something(n) = ""
 '     n = n + 1
 ' Next x
+
+
+
 
 Public Sub reportError(functionName As String, tSTR() As String)
 Dim myErr() As String
