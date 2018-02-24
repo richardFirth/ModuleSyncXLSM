@@ -14,11 +14,16 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
+
+
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.2
+'$*MINOR_VERSION*1.4
 '$*DATE*2Feb18
 '$*ID*ListSelectB
-
+'$*CharCount*1110*xxxx
+'$*RowCount*63*xxxxx
 
 Option Explicit
 
@@ -26,37 +31,30 @@ Private OptionsToSelect() As String
 Private selectedOption As String
 
 Function getSelectedOption() As String
-    getSelectedOption = selectedOption
+getSelectedOption = selectedOption
 End Function
 
 
 Public Sub setOptionsToSelect(theCat() As String)
-    OptionsToSelect = theCat
-    
-    Call PopulateComboBoxWithStringArr(Me.ComboBox1, OptionsToSelect)
-        
+OptionsToSelect = theCat
+Call PopulateComboBoxWithStringArr(Me.ComboBox1, OptionsToSelect)
+
 End Sub
 
 
-
 Private Sub CButton1_Click()
-
-    selectedOption = ComboBox1.Value
-    Me.Hide
+selectedOption = ComboBox1.Value
+Me.Hide
 End Sub
 
 
 Private Sub UserForm_Initialize()
-
-    Me.Left = 960 / 2
-
+Me.Left = 960 / 2
 End Sub
 
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
-
-    If CloseMode = 0 Then End
-
+If CloseMode = 0 Then End
 End Sub
 
 

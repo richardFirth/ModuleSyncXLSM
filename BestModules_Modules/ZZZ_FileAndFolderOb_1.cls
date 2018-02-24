@@ -8,10 +8,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.4
-'$*DATE*15Feb18
+'$*MINOR_VERSION*1.6
+'$*DATE*21Feb18
 '$*ID*FileAndFolder
-
+'$*CharCount*3190*xxxx
+'$*RowCount*92*xxxxx
 
 ' object for wrapper functions for file system object.
 'Depends on ZZZ_StringArrayFunctions_6 and ZZZ_FileAndFolderRetrieval_5
@@ -34,24 +35,29 @@ Private PathsAndNames() As PathAndName
 
 
 
-
+Public Sub initializeWithPath(Tpath As String)
+Dim loc(1 To 1) As String
+loc(1) = Tpath
+filePaths = loc
+PathsAndNames = getDetailFolderTree(Tpath)
+End Sub
 Public Sub initializeWithPaths(Tpaths() As String)
-    filePaths = Tpaths
-    Dim x As Integer
-    For x = LBound(filePaths) To UBound(filePaths)
-        PathsAndNames = ConcatenatePathAndName(PathsAndNames, getDetailFolderTree(filePaths(x)))
-    Next x
+filePaths = Tpaths
+Dim x As Integer
+For x = LBound(filePaths) To UBound(filePaths)
+PathsAndNames = ConcatenatePathAndName(PathsAndNames, getDetailFolderTree(filePaths(x)))
+Next x
 
 End Sub
 
 Public Function getAllPathsAndNames() As PathAndName()
-   getAllPathsAndNames = PathsAndNames
+getAllPathsAndNames = PathsAndNames
 End Function
 
 
 Public Function getAllPathsAndNamesWithExtention(anExtention As String) As PathAndName()
-    Dim theExtention(1 To 1) As String: theExtention(1) = anExtention
-    getAllPathsAndNamesWithExtention = getAllPathsAndNamesWithExtentions(theExtention)
+Dim theExtention(1 To 1) As String: theExtention(1) = anExtention
+getAllPathsAndNamesWithExtention = getAllPathsAndNamesWithExtentions(theExtention)
 End Function
 
 Public Function getAllPathsAndNamesWithExtentions(theExtentions() As String) As PathAndName()
@@ -59,13 +65,13 @@ Public Function getAllPathsAndNamesWithExtentions(theExtentions() As String) As 
 Dim locRetP() As PathAndName
 Dim x As Integer: Dim n As Integer: n = 1
 For x = LBound(PathsAndNames) To UBound(PathsAndNames)
-    
-    If hasValidExtention(theExtentions, PathsAndNames(x)) Then
-        ReDim Preserve locRetP(1 To n) As PathAndName
-        locRetP(n) = PathsAndNames(x)
-        n = n + 1
-    End If
-    
+
+If hasValidExtention(theExtentions, PathsAndNames(x)) Then
+ReDim Preserve locRetP(1 To n) As PathAndName
+locRetP(n) = PathsAndNames(x)
+n = n + 1
+End If
+
 Next x
 
 getAllPathsAndNamesWithExtentions = locRetP
@@ -73,13 +79,13 @@ getAllPathsAndNamesWithExtentions = locRetP
 End Function
 
 
-    
-    Private Function hasValidExtention(validExtentions() As String, FileN As PathAndName) As Boolean
-    
-        Dim x As Integer
-        For x = LBound(validExtentions) To UBound(validExtentions)
-            If UCase(validExtentions(x)) = UCase(Right(FileN.B_Name, Len(validExtentions(x)))) Then hasValidExtention = True: Exit Function
-        Next x
-    
-    End Function
+
+Private Function hasValidExtention(validExtentions() As String, FileN As PathAndName) As Boolean
+
+Dim x As Integer
+For x = LBound(validExtentions) To UBound(validExtentions)
+If UCase(validExtentions(x)) = UCase(Right(FileN.B_Name, Len(validExtentions(x)))) Then hasValidExtention = True: Exit Function
+Next x
+
+End Function
 

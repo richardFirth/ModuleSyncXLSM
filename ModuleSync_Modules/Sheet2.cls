@@ -9,9 +9,15 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
 
-
 Private Sub RunTool_Click()
-    Call ModuleupdaterButtonEntry("")
+
+    If Not UI_OPEN Then
+        UI_OPEN = True
+        Dim myMU As New ModuleUpdater
+        Call myMU.initialSetup
+        myMU.Show
+    End If
+    
 End Sub
 
 

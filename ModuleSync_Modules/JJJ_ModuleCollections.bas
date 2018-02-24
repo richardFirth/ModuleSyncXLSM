@@ -7,23 +7,13 @@ Attribute VB_Name = "JJJ_ModuleCollections"
 Option Explicit
 
 
-Enum ModuleSpecies
-    A_NORMAL
-    B_CLASS
-    C_FORM
-End Enum
-
-
-
-
-
 Function getAllModules(theWKBK As Workbook) As Collection
-    Dim LOC As Collection
-    Set LOC = getModulesByType(theWKBK, A_NORMAL)
-    Set LOC = combineCollections(LOC, getModulesByType(theWKBK, B_CLASS))
-    Set LOC = combineCollections(LOC, getModulesByType(theWKBK, C_FORM))
+    Dim loc As Collection
+    Set loc = getModulesByType(theWKBK, A_NORMAL)
+    Set loc = combineCollections(loc, getModulesByType(theWKBK, B_CLASS))
+    Set loc = combineCollections(loc, getModulesByType(theWKBK, C_FORM))
 
-    Set getAllModules = LOC
+    Set getAllModules = loc
 
 End Function
 
