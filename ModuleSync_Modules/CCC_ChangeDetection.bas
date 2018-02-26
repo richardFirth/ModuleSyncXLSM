@@ -37,7 +37,7 @@ End Function
 
 Function updateCountsInFile(tPath As String, altV As AlterVersion) As Boolean
     
-    Dim VBACODE() As String: VBACODE = getTxTDocumentAsString(tPath)
+    Dim VBACODE() As String: VBACODE = getTxTDocumentAsCleanString(tPath)
     
     Dim TrueCharCount As Integer: TrueCharCount = getTrueCharCount(VBACODE)
     Dim TrueRowCount As Integer: TrueRowCount = getTrueRowCount(VBACODE)

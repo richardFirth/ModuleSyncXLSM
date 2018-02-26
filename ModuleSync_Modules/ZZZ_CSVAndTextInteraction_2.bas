@@ -1,6 +1,6 @@
 Attribute VB_Name = "ZZZ_CSVAndTextInteraction_2"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.7
+'$*MINOR_VERSION*1.8
 '$*DATE*21Feb18
 '$*ID*CSVAndTextInteraction
 '$*CharCount*4625*xxxx
@@ -146,6 +146,10 @@ End Function
 
 
 
+Function getTxTDocumentAsCleanString(thePath As String) As String()
+    getTxTDocumentAsCleanString = TrimAndCleanArray(getTxTDocumentAsString(thePath)) ' otherwise weird stuff messes up your array
+End Function
+
 Function getTxTDocumentAsString(thePath As String) As String()
 Dim theFileContents As String
 
@@ -154,8 +158,9 @@ theFileContents = CreateObject("Scripting.FileSystemObject").GetFile(thePath).Op
 
 Dim docFeed() As String
 docFeed = Split(theFileContents, Chr(10))
-getTxTDocumentAsString = TrimAndCleanArray(docFeed) ' otherwise weird stuff messes up your array
-'getTxTDocumentAsString = docFeed
+
+getTxTDocumentAsString = docFeed ' otherwise weird stuff messes up your array
+
 Exit Function
 getTXTerr:
 

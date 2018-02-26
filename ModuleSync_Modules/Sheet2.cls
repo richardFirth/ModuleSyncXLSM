@@ -11,6 +11,10 @@ Option Explicit
 
 Private Sub RunTool_Click()
 
+     'MsgBox "remember that getTXT method changed! - everything isn't working yet"
+    ' MsgBox "also automate the date thing PLZ"
+    
+
     If Not UI_OPEN Then
         UI_OPEN = True
         Dim myMU As New ModuleUpdater

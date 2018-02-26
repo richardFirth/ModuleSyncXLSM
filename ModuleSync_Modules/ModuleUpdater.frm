@@ -102,7 +102,7 @@ Private Sub useDefaultList_Click()
         Call complexRoutineEnd("")
     End If
     
-    modSyncList = getTxTDocumentAsString(ThisWorkbook.Path & "\ModSyncList.txt")
+    modSyncList = getTxTDocumentAsCleanString(ThisWorkbook.Path & "\ModSyncList.txt")
     modSyncList = removeBlanksFromArray(modSyncList) ' in case there's an extra enter at end of txt file
     Dim filePresent() As String
     

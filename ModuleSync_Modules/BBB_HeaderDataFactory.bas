@@ -129,7 +129,7 @@ locModuleVersionData.A_Name = "N/A"
 
 If Not FileThere(modulePath) Then GoTo extractSingleModVerDataError
 
-Dim VBACODE() As String: VBACODE = getTxTDocumentAsString(modulePath)
+Dim VBACODE() As String: VBACODE = getTxTDocumentAsCleanString(modulePath)
 
 locModuleVersionData.F_ModulePath = modulePath
 locModuleVersionData.A_Name = extractVersionName(modulePath)
