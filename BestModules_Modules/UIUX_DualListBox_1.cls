@@ -8,14 +8,27 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.4
-'$*DATE*22Feb18
+'$*MINOR_VERSION*1.6
+'$*DATE*2/28/2018*xx
 '$*ID*DualListBox
-'$*CharCount*3344*xxxx
+'$*CharCount*5227*xxxx
 '$*RowCount*154*xxxx
 
 ' this class object is for having a list box where selecting each thing selects stuff in the other list box
 
+'/T--UIUX_DualListBox_1----------------------------------------------------------------------------------------------------------------\
+' Function Name          | Return              |  Description                                                                          |
+'------------------------|---------------------|---------------------------------------------------------------------------------------|
+'initializeDualList      | Void                |  intializes the object with two list boxes                                            |
+'refreshSubmenu          | Void                |  refreshes the submenu                                                                |
+'displayData             | Void                |  displays the data                                                                    |
+'ClearListBoxMenu        | ClearListBoxMenu()  |  clears the list box menu                                                             |
+'AddToListBoxMenu        | String)             |  adds to the list box menu                                                            |
+'getTitles               | String()            |  gets the titles array                                                                |
+'getSelectedSubMenu      | String()            |  gets the selected item from the submenu                                              |
+'ConcatenateListBoxMenu  | ListBoxMenu()       |  concatentates two listbox menu types                                                 |
+'ListBoxMenuHasStuff     | Boolean             | https://stackoverflow.com/questions/206324/how-to-check-for-empty-array-in-vba-macro  |
+'\-------------------------------------------------------------------------------------------------------------------------------------/
 
 Option Explicit
 
@@ -28,42 +41,38 @@ Private MainListBox As MSForms.ListBox
 Private SecondaryListBox As MSForms.ListBox
 Private MenuData() As ListBoxMenu
 
-
 Public Sub initializeDualList(ByRef tMain As MSForms.ListBox, ByRef tSec As MSForms.ListBox)
+' intializes the object with two list boxes
 Set MainListBox = tMain
 Set SecondaryListBox = tSec
 End Sub
 
-
 Public Sub refreshSubmenu()
+' refreshes the submenu
 Call PopulateListBoxWithStringArr(SecondaryListBox, getSelectedSubMenu)
 End Sub
 
-
 Public Sub displayData()
-
+' displays the data
 Call PopulateListBoxWithStringArr(MainListBox, getTitles)
 MainListBox.Selected(0) = True
 Call PopulateListBoxWithStringArr(SecondaryListBox, getSelectedSubMenu)
 
 End Sub
 
-
 ' /----------------------------------------\
 ' |add to string array                     |
 ' \----------------------------------------/
 
-
 Public Function ClearListBoxMenu()
-
+' clears the list box menu
 Dim newArr() As ListBoxMenu
 MenuData = newArr
 
 End Function
 
-
 Public Function AddToListBoxMenu(theSubMenu() As String, theTitle As String)
-
+' adds to the list box menu
 Dim newArr(1 To 1) As ListBoxMenu
 newArr(1).A_Title = theTitle
 newArr(1).B_SubMenu = theSubMenu
@@ -71,8 +80,8 @@ MenuData = ConcatenateListBoxMenu(MenuData, newArr)
 
 End Function
 
-
 Private Function getTitles() As String()
+' gets the titles array
 If Not ListBoxMenuHasStuff(MenuData) Then Exit Function
 
 Dim something() As String
@@ -88,9 +97,8 @@ getTitles = something
 
 End Function
 
-
 Private Function getSelectedSubMenu() As String()
-
+' gets the selected item from the submenu
 If Not ListBoxMenuHasStuff(MenuData) Then Exit Function
 
 Dim tSTR() As String: tSTR() = getSelectedItemsFromListBox(MainListBox)
@@ -108,14 +116,8 @@ MsgBox "reached"
 
 End Function
 
-
-
-
-' /----------------------------------------\
-' |concatentates two string arrays         |
-' \----------------------------------------/
 Private Function ConcatenateListBoxMenu(theArray1() As ListBoxMenu, theArray2() As ListBoxMenu) As ListBoxMenu()
-
+' concatentates two listbox menu types
 Dim newArr() As ListBoxMenu
 
 Dim n As Long: n = 1
@@ -141,8 +143,6 @@ End If
 ConcatenateListBoxMenu = newArr
 
 End Function
-
-
 
 ' /-----------------------------------------\
 ' |returns false when array has nothing     |

@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ModuleUpdater 
    Caption         =   "Module Updater"
-   ClientHeight    =   6252
+   ClientHeight    =   6255
    ClientLeft      =   120
    ClientTop       =   468
    ClientWidth     =   9612
@@ -36,6 +36,10 @@ Public Sub initialSetup()
         Call complexRoutineEnd("")
         Exit Sub
     End If
+    updateTableCheckBox.Value = True
+End Sub
+
+Private Sub CommandButton5_Click()
 
 End Sub
 
@@ -73,7 +77,7 @@ Call complexRoutineStart("")
         totalPaths = removeDupesStringArray(ConcatenateArrays(newArr, totalPaths))
     End If
     
-    Set myModuleCollection = createHeaderObjectsCollection(totalPaths)
+    Set myModuleCollection = createModuleObjectsCollection(totalPaths)
     Call myModuleCollection.identifyAllOldModules
     Call myModuleCollection.displayHeaderObjectData(ThisWorkbook.Sheets("VersionControl"))
     Set myDualListbox = New UIUX_DualListBox_1
@@ -92,6 +96,23 @@ myDualListbox.refreshSubmenu
 End Sub
 
 
+
+
+Private Sub UpdateTables_Click()
+Call complexRoutineStart("")
+    If myModuleCollection Is Nothing Then MsgBox "Only use once versions are compared!": Exit Sub
+
+    Dim tHL1() As String
+    tHL1 = getSelectedItemsFromListBox(ListBox1)
+    If Not arrayHasStuff(tHL1) Then MsgBox "No Module Selected": Exit Sub
+    Call myModuleCollection.UpdateTablesInWKBK(tHL1(1))
+    
+Call complexRoutineEnd("")
+End Sub
+
+
+
+
 Private Sub useDefaultList_Click()
     
     If Not FileThere(ThisWorkbook.Path & "\ModSyncList.txt") Then
@@ -102,11 +123,12 @@ Private Sub useDefaultList_Click()
         Call complexRoutineEnd("")
     End If
     
-    modSyncList = getTxTDocumentAsCleanString(ThisWorkbook.Path & "\ModSyncList.txt")
+    modSyncList = CleanArray(convertTXTDocumentToStringArr(ThisWorkbook.Path & "\ModSyncList.txt"))
     modSyncList = removeBlanksFromArray(modSyncList) ' in case there's an extra enter at end of txt file
     Dim filePresent() As String
     
     Dim x As Integer
+
     For x = LBound(modSyncList) To UBound(modSyncList)
         ReDim Preserve filePresent(1 To x) As String
         If Not FileThere(modSyncList(x)) Then
@@ -118,6 +140,7 @@ Private Sub useDefaultList_Click()
         End If
         
     Next x
+
     
     Call PopulateListBoxWithStringArr(ListBox1, namesFromPaths(modSyncList))
     Call PopulateListBoxWithStringArr(ListBox2, filePresent)
@@ -171,10 +194,12 @@ Private Sub AcceptWKBK_Click()
 End Sub
 
 Private Sub RejectMod_Click()
+' reject changes in a module
     Call AcceptRejectModChanges(False)
 End Sub
 
 Private Sub RejectWKBK_Click()
+' reject changes in a workbook
     Call AcceptRejectWKBKChanges(False)
 End Sub
 
@@ -218,7 +243,7 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
 End Sub
 
 Private Sub closeSequence()
-    Call clearWorkSpace(ThisWorkbook.Sheets(1), 1, 5)
+    Call clearWorkSpace(ThisWorkbook.Sheets(1), 1, 6)
     If Not StoreFilesOnDesktop Then Call EraseExportedFolder
     UI_OPEN = False
 End Sub

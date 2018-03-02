@@ -1,59 +1,50 @@
 Attribute VB_Name = "ZZZ_CSVAndTextInteraction_2"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.7
-'$*DATE*21Feb18
+'$*MINOR_VERSION*1.9
+'$*DATE*2/28/2018*xx
 '$*ID*CSVAndTextInteraction
-'$*CharCount*4625*xxxx
-'$*RowCount*212*xxxx
+'$*CharCount*6192*xxxx
+'$*RowCount*205*xxxx
+
+'/T--ZZZ_CSVAndTextInteraction_2----------------------------------------------------------------------------------------------------\
+' Function Name                 | Return         |  Description                                                                     |
+'-------------------------------|----------------|----------------------------------------------------------------------------------|
+'string2wrapper                 | StringWrapper  |  feed in string arrays to get an array of wrappers that hold the string arrays.  |
+'appendToCSV                    | Boolean        |  appends a string array to CSV file as a row                                     |
+'appendAsRowToCSV               | Boolean        |                                                                                  |
+'appendWrappedDataToCSV         | Boolean        |  feed stringrappers in. each stringwrapper is written as a row                   |
+'getCSVFromFile                 | String()       |  get a csv file as a string array                                                |
+'convertTXTDocumentToStringArr  | String()       |  get a text document as a string array                                           |
+'getTxTDocumentAsString         | String()       |  get a text document as a string                                                 |
+'createTextFromStringArr        | Void           |  spawns a text file containing the string array                                  |
+'createTextFromString           | Void           |  creates a text document containing a single string                              |
+'createFile                     | Boolean        |  creates a file                                                                  |
+'\----------------------------------------------------------------------------------------------------------------------------------/
 
 Option Explicit
-
-'/---ZZZ_CSVAndTextInteraction_2---------updated 21Feb18------------------------------------------\
-'  Function Name                   | Return          |   Description                             |
-'----------------------------------|-----------------|-------------------------------------------|
-' appendAsRowToCSV                 | Boolean         | appends a string to a CSV                 |
-' appendWrappedDataToCSV           | Boolean         |
-' getCSVFromFile                   | String()        | gets a CSV file into a string             |
-' getTxTDocumentAsString           | String()        | gets a text document into a string        |
-' createTextFromStringArr          | void            | saves a string into a text document       |
-' createFile                       | Boolean         | creates a file                            |
-'\-----------------------------------------------------------------------------------------------/
-
-
-'Function getTxTDocumentAsString(thePath As String) As String()
-'Sub createTextFromStringArr(theContents() As String, theFullPathName As String)
-'Function createFile(fileobject As Object, FSO As Object, fileName As String) As Boolean
-
 
 Public Type StringWrapper
 theSTR() As String
 End Type
-
 
 Public seenError As Boolean
 
 Const ForReading = 1, ForWriting = 2, ForAppending = 3
 Const TristateUseDefault = -2, TristateTrue = -1, TristateFalse = 0
 
-
-
-
 Public Function string2wrapper(mySTR() As String) As StringWrapper
+' feed in string arrays to get an array of wrappers that hold the string arrays.
 Dim mySW As StringWrapper
 mySW.theSTR = mySTR
 string2wrapper = mySW
 End Function
 
-
-
-' each string array is appended as a row
 Function appendToCSV(filePath As String, contents() As String) As Boolean
+' appends a string array to CSV file as a row
 If Not seenError Then MsgBox "Function deprectiated: appendToCSV"
 seenError = True
 appendToCSV = appendAsRowToCSV(filePath, contents)
 End Function
-
-
 
 Function appendAsRowToCSV(filePath As String, theRow() As String) As Boolean
 
@@ -75,9 +66,8 @@ BADappendtoCSV:
 appendAsRowToCSV = False
 End Function
 
-
 Function appendWrappedDataToCSV(filePath As String, theRowDat() As StringWrapper) As Boolean
-
+' feed stringrappers in. each stringwrapper is written as a row
 Dim x As Integer
 Dim y As Long
 On Error GoTo BADappendDCVToCSV
@@ -97,10 +87,7 @@ End With
 
 Next y
 
-
 Close #1
-
-
 
 appendWrappedDataToCSV = True
 
@@ -109,13 +96,8 @@ BADappendDCVToCSV:
 appendWrappedDataToCSV = False
 End Function
 
-
-
-
-
-
 Function getCSVFromFile(filePath As String) As String()
-
+' get a csv file as a string array
 Dim csvRow() As String
 Dim dataIN As String
 Dim x As Integer: x = 1
@@ -144,9 +126,24 @@ Resume finishedA
 
 End Function
 
+Function convertTXTDocumentToStringArr(thePath As String) As String()
+' get a text document as a string array
+Dim theFileContents As String
 
+On Error GoTo convTXTerr
+theFileContents = CreateObject("Scripting.FileSystemObject").GetFile(thePath).OpenAsTextStream(ForReading, TristateUseDefault).ReadAll
+
+Dim docFeed() As String
+docFeed = Split(theFileContents, Chr(10))
+convertTXTDocumentToStringArr = docFeed
+
+Exit Function
+convTXTerr:
+
+End Function
 
 Function getTxTDocumentAsString(thePath As String) As String()
+' get a text document as a string
 Dim theFileContents As String
 
 On Error GoTo getTXTerr
@@ -154,16 +151,21 @@ theFileContents = CreateObject("Scripting.FileSystemObject").GetFile(thePath).Op
 
 Dim docFeed() As String
 docFeed = Split(theFileContents, Chr(10))
-getTxTDocumentAsString = TrimAndCleanArray(docFeed) ' otherwise weird stuff messes up your array
-'getTxTDocumentAsString = docFeed
+getTxTDocumentAsString = TrimAndCleanArray(docFeed)
+
+' otherwise weird stuff messes up your array
+' getTxTDocumentAsString = docFeed
+Dim ERRSTR(1 To 2) As String
+ERRSTR(1) = "OLD METHOD!"
+Call reportError("getTxTDocumentAsString", ERRSTR)
+
 Exit Function
 getTXTerr:
 
 End Function
 
-
 Sub createTextFromStringArr(theContents() As String, theFullPathName As String)
-
+' spawns a text file containing the string array
 Dim fs As Object, f As Object
 Set fs = CreateObject("Scripting.FileSystemObject") ' this creates the fileSystemObject object for all file operations
 
@@ -178,11 +180,8 @@ End If
 
 End Sub
 
-
-
-
 Sub createTextFromString(theContents As String, theFullPathName As String)
-
+' creates a text document containing a single string
 Dim fs As Object, f As Object
 Set fs = CreateObject("Scripting.FileSystemObject") ' this creates the fileSystemObject object for all file operations
 
@@ -192,9 +191,8 @@ f.WriteLine theContents
 
 End Sub
 
-
-
 Function createFile(fileobject As Object, FSO As Object, fileName As String) As Boolean
+' creates a file
 On Error GoTo createFileError
 
 Set fileobject = FSO.CreateTextFile(fileName, True)
@@ -203,9 +201,4 @@ Exit Function
 createFileError:
 MsgBox "Problem: " & fileName
 End Function
-
-
-
-
-
 

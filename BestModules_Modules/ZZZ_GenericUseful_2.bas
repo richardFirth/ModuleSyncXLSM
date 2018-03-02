@@ -1,26 +1,24 @@
 Attribute VB_Name = "ZZZ_GenericUseful_2"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.7
-'$*DATE*15Feb18
+'$*MINOR_VERSION*1.8
+'$*DATE*2/28/2018*xx
 '$*ID*GenericUseful
-'$*CharCount*5036*xxxx
-'$*RowCount*198*xxxx
+'$*CharCount*5314*xxxx
+'$*RowCount*182*xxxx
 
-
-'/---ZZZ_GenericUseful_2--------------------------------------------------------------------------\
-'  Function Name         | Return          |   Description                                        |
-'------------------------|-----------------|------------------------------------------------------|
-' reportError            | void            | appends an error log to a CSV in this folder         |
-' clearWorkSpace         | void            | clears columns beween startpoint and stop point      |
-' saveWorkbookToDesktop  | void            | saves the given workbook to the desktop              |
-' addSheetWithName       | void            | adds a sheet with the specific name                  |
-' complexRoutineStart    | void            | switches off stuff to allow for faster execution     |
-' complexRoutineEnd      | void            | switches the stuff back on                           |
-' GenerateIDcode         | string          | generates a random ID code.                          |
-' readableDate           | string          | gives todays date as a string in format 7Feb18       |
-'\------------------------------------------------------------------------------------------------/
-
-
+'/T--ZZZ_GenericUseful_2--------------------------------------------------------------\
+' Function Name         | Return  |  Description                                      |
+'-----------------------|---------|---------------------------------------------------|
+'reportError            | Void    | appends an error log to a CSV in this folder      |
+'clearWorkSpace         | Void    | clears columns beween startpoint and stop point   |
+'saveWorkbookToDesktop  | Void    | saves the given workbook to the desktop           |
+'addSheetWithName       | Void    | adds a sheet with the specific name               |
+'complexRoutineStart    | Void    | switches off stuff to allow for faster execution  |
+'endComplex             | Void    |  visible version                                  |
+'complexRoutineEnd      | Void    |  turns stuff back on                              |
+'GenerateIDcode         | String  | generates a random ID code                        |
+'readableDate           | String  | gives todays date as a string in format 7Feb18    |
+'\------------------------------------------------------------------------------------/
 
 Option Explicit
 
@@ -28,7 +26,6 @@ Option Explicit
 '  For x = LBound(tErrData) To UBound(tErrData)
 '
 '  Next x
-
 
 ' Dim x As Integer
 ' Dim n As Integer: n = 1
@@ -38,10 +35,8 @@ Option Explicit
 '     n = n + 1
 ' Next x
 
-
-
-
 Public Sub reportError(functionName As String, tSTR() As String)
+'appends an error log to a CSV in this folder
 Dim myErr() As String
 Dim repDat(1 To 2) As String
 repDat(1) = functionName
@@ -51,9 +46,8 @@ myErr = ConcatenateArrays(repDat, tSTR)
 Call appendAsRowToCSV(ThisWorkbook.Path & "\errLog.csv", myErr)
 End Sub
 
-
-
 Public Sub clearWorkSpace(aSheet As Worksheet, startP As Integer, stopP As Integer)
+'clears columns beween startpoint and stop point
 Dim x As Integer
 For x = startP To stopP
 
@@ -67,19 +61,18 @@ End With
 Next x
 End Sub
 
-
 Public Sub saveWorkbookToDesktop(theWKBK As Workbook, theName As String)
+'saves the given workbook to the desktop
 theWKBK.SaveAs (CreateObject("WScript.Shell").SpecialFolders("Desktop") & "\" & theName)
 End Sub
 
-
 Public Sub addSheetWithName(theName As String, theBook As Workbook)
+'adds a sheet with the specific name
 theBook.Sheets.Add(After:=theBook.Worksheets(theBook.Worksheets.Count)).Name = theName
 End Sub
 
-
-
 Public Sub complexRoutineStart(notUsed As String)
+'switches off stuff to allow for faster execution
 With Application
 .ShowWindowsInTaskbar = False
 .ScreenUpdating = False
@@ -88,11 +81,12 @@ End With
 End Sub
 
 Public Sub endComplex()
+' visible version
 Call complexRoutineEnd("")
 End Sub
 
-
 Public Sub complexRoutineEnd(notUsed As String)
+' turns stuff back on
 With Application
 .ShowWindowsInTaskbar = True
 .ScreenUpdating = True
@@ -101,7 +95,7 @@ End With
 End Sub
 
 Public Function GenerateIDcode() As String
-
+'generates a random ID code
 Randomize
 
 Dim a As Integer:   a = Int(9 * Rnd) + 1
@@ -144,9 +138,8 @@ End Select
 
 End Function
 
-
 Public Function readableDate(Optional aDate As Date = 0) As String
-
+'gives todays date as a string in format 7Feb18
 If aDate = 0 Then aDate = Now()
 
 Dim currentDay As Integer: currentDay = Day(aDate)
@@ -185,13 +178,4 @@ End Select
 readableDate = currentDay & currentMonth & currentYear
 
 End Function
-
-
-
-
-
-
-
-
-
 

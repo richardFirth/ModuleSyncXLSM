@@ -8,11 +8,22 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.4
-'$*DATE*13Feb18
+'$*MINOR_VERSION*1.6
+'$*DATE*2/28/2018*xx
 '$*ID*CSVTable
-'$*CharCount*2296*xxxx
-'$*RowCount*119*xxxx
+'$*CharCount*3331*xxxx
+'$*RowCount*115*xxxx
+
+'/T--ZZZ_CSVLookupTable_1----------------------------------------------------------------\
+' Function Name              | Return         |  Description                             |
+'----------------------------|----------------|------------------------------------------|
+'lookupByValue               | Void           |  not finished                            |
+'initialSetupFromFile        | Void           |  pass a CSV file                         |
+'getStringArrByName          | String()       |  get a string array by giving a key      |
+'showEntireLookupTable       | Void           |  show the whole table in a new workbook  |
+'getCSVFileToLookupTable     | Void           |  get the data                            |
+'getLookupWrapperFromColumn  | LookupWrapper  |  ddfgd                                   |
+'\---------------------------------------------------------------------------------------/
 
 Option Explicit
 
@@ -21,35 +32,25 @@ A_Title As String
 B_Data() As String
 End Type
 
-
 Private lookupTable() As LookupWrapper
 
 Private theValues() As String
 Private thePath As String
 
-
-
 Public Sub lookupByValue(tVal As String, MatchTable As String, getTable As String)
-
+' not finished
 Dim matchT() As String: matchT = getStringArrByName(MatchTable)
 Dim getT() As String: getT = getStringArrByName(getTable)
-
-
-
-
 End Sub
 
-
-
 Public Sub initialSetupFromFile(fPath As String)
+' pass a CSV file
 thePath = fPath
 If FileThere(thePath) Then Call getCSVFileToLookupTable(thePath)
 End Sub
 
-
-
 Public Function getStringArrByName(tName As String) As String()
-
+' get a string array by giving a key
 Dim x As Integer
 
 For x = LBound(lookupTable) To UBound(lookupTable)
@@ -58,9 +59,8 @@ Next x
 
 End Function
 
-
-
 Public Sub showEntireLookupTable()
+' show the whole table in a new workbook
 Dim output As Workbook
 Set output = Workbooks.Add
 
@@ -72,9 +72,8 @@ Next x
 
 End Sub
 
-
 Private Sub getCSVFileToLookupTable(filePath As String)
-
+' get the data
 Dim newDat As Workbook
 Set newDat = Workbooks.Add(filePath)
 
@@ -93,14 +92,12 @@ lookupTable = localLookupTable
 Call newDat.Close(False)
 End Sub
 
-
 Private Function getLookupWrapperFromColumn(theSheet As Worksheet, theColumn As Integer) As LookupWrapper
-
+' ddfgd
 Dim locWrap As LookupWrapper
 Dim locSTR() As String
 
 With theSheet
-
 
 Dim x As Long
 For x = 1 To .Cells.SpecialCells(xlCellTypeLastCell).Row ' last cell will match overall blanks
@@ -114,5 +111,4 @@ End With
 
 getLookupWrapperFromColumn = locWrap
 End Function
-
 

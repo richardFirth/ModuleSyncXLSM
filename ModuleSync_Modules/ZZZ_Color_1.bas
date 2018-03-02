@@ -1,11 +1,17 @@
 Attribute VB_Name = "ZZZ_Color_1"
 '$VERSIONCONTROL
 '$*MINOR_VERSION*1.2
-'$*DATE*23Jan18
+'$*DATE*2/28/2018*xx
 '$*ID*Color
-'$*CharCount*3282*xxxx
-'$*RowCount*108*xxxx
+'$*CharCount*3830*xxxx
+'$*RowCount*103*xxxx
 
+'/T--ZZZ_Color_1-----------------------------------------------\
+' Function Name| Return|  Description                            |
+'------------|-------|-----------------------------------------|
+'getRFColor  | Long  |  gets an RF Color                       |
+'getColorTF  | Long  |  gets green for true and red for false  |
+'\-------------------------------------------------------------/
 
 Option Explicit
 
@@ -31,7 +37,6 @@ Option Explicit
 'Grey    #808080 (128, 128, 128) (0, 0, 0, 50)
 'White   #FFFFFF (255, 255, 255) (0, 0, 0, 0)
 'Black   #000000 (0, 0, 0)   (0, 0, 0, 100)
-
 
 Public Enum RFcolor
 A_Red
@@ -59,49 +64,39 @@ V_Black
 W_Nocolor
 End Enum
 
-
-
-
 ' /-----------------------------------------\
 ' |interface for getting common colors      |
 ' \-----------------------------------------/
 Public Function getRFColor(theC As RFcolor) As Long
-
-If theC = A_Red Then getRFColor = RGB(230, 25, 75): Exit Function
-If theC = B_Green Then getRFColor = RGB(60, 180, 75): Exit Function
-If theC = C_Yellow Then getRFColor = RGB(255, 225, 25): Exit Function
-If theC = D_Blue Then getRFColor = RGB(0, 130, 200): Exit Function
-If theC = E_Orange Then getRFColor = RGB(245, 130, 48): Exit Function
-If theC = F_Purple Then getRFColor = RGB(145, 30, 180): Exit Function
-If theC = G_Cyan Then getRFColor = RGB(70, 240, 240): Exit Function
-If theC = H_Magenta Then getRFColor = RGB(240, 50, 230): Exit Function
-If theC = I_Lime Then getRFColor = RGB(210, 245, 60): Exit Function
-If theC = J_Pink Then getRFColor = RGB(250, 190, 190): Exit Function
-If theC = K_Teal Then getRFColor = RGB(0, 128, 128): Exit Function
-If theC = L_Lavender Then getRFColor = RGB(230, 190, 255): Exit Function
-If theC = M_Brown Then getRFColor = RGB(170, 110, 40): Exit Function
-If theC = N_Beige Then getRFColor = RGB(255, 250, 200): Exit Function
-If theC = O_Maroon Then getRFColor = RGB(128, 0, 0): Exit Function
-If theC = P_Mint Then getRFColor = RGB(170, 255, 195): Exit Function
-If theC = Q_Olive Then getRFColor = RGB(128, 128, 0): Exit Function
-If theC = R_Coral Then getRFColor = RGB(255, 215, 180): Exit Function
-If theC = S_Navy Then getRFColor = RGB(0, 0, 128): Exit Function
-If theC = T_Grey Then getRFColor = RGB(128, 128, 128): Exit Function
-If theC = U_White Then getRFColor = RGB(255, 255, 255): Exit Function
-If theC = V_Black Then getRFColor = RGB(0, 0, 0): Exit Function
-If theC = W_Nocolor Then getRFColor = RGB(255, 255, 255): Exit Function
+' gets an RF Color
+    If theC = A_Red Then getRFColor = RGB(230, 25, 75): Exit Function
+    If theC = B_Green Then getRFColor = RGB(60, 180, 75): Exit Function
+    If theC = C_Yellow Then getRFColor = RGB(255, 225, 25): Exit Function
+    If theC = D_Blue Then getRFColor = RGB(0, 130, 200): Exit Function
+    If theC = E_Orange Then getRFColor = RGB(245, 130, 48): Exit Function
+    If theC = F_Purple Then getRFColor = RGB(145, 30, 180): Exit Function
+    If theC = G_Cyan Then getRFColor = RGB(70, 240, 240): Exit Function
+    If theC = H_Magenta Then getRFColor = RGB(240, 50, 230): Exit Function
+    If theC = I_Lime Then getRFColor = RGB(210, 245, 60): Exit Function
+    If theC = J_Pink Then getRFColor = RGB(250, 190, 190): Exit Function
+    If theC = K_Teal Then getRFColor = RGB(0, 128, 128): Exit Function
+    If theC = L_Lavender Then getRFColor = RGB(230, 190, 255): Exit Function
+    If theC = M_Brown Then getRFColor = RGB(170, 110, 40): Exit Function
+    If theC = N_Beige Then getRFColor = RGB(255, 250, 200): Exit Function
+    If theC = O_Maroon Then getRFColor = RGB(128, 0, 0): Exit Function
+    If theC = P_Mint Then getRFColor = RGB(170, 255, 195): Exit Function
+    If theC = Q_Olive Then getRFColor = RGB(128, 128, 0): Exit Function
+    If theC = R_Coral Then getRFColor = RGB(255, 215, 180): Exit Function
+    If theC = S_Navy Then getRFColor = RGB(0, 0, 128): Exit Function
+    If theC = T_Grey Then getRFColor = RGB(128, 128, 128): Exit Function
+    If theC = U_White Then getRFColor = RGB(255, 255, 255): Exit Function
+    If theC = V_Black Then getRFColor = RGB(0, 0, 0): Exit Function
+    If theC = W_Nocolor Then getRFColor = RGB(255, 255, 255): Exit Function
 End Function
-
 
 Public Function getColorTF(val As Boolean) As Long
-If val Then getColorTF = getRFColor(B_Green): Exit Function
-getColorTF = getRFColor(A_Red)
+' gets green for true and red for false
+    If val Then getColorTF = getRFColor(B_Green): Exit Function
+    getColorTF = getRFColor(A_Red)
 End Function
-
-
-
-
-
-
-
 

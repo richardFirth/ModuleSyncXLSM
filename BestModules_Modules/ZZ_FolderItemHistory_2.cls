@@ -8,19 +8,25 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.5
-'$*DATE*7Feb18
+'$*MINOR_VERSION*1.7
+'$*DATE*2/28/2018*xx
 '$*ID*folderItemsCLS
-'$*CharCount*2059*xxxx
-'$*RowCount*95*xxxxx
+'$*CharCount*3318*xxxx
+'$*RowCount*100*xxxx
 
-
-'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-'@@@ Depends on ZZZ_StringArrayFunctions_5 @@@
-'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+'/T--ZZ_FolderItemHistory_2--------------------------------------------------------------------------\
+' Function Name     | Return    |  Description                                                       |
+'-------------------|-----------|--------------------------------------------------------------------|
+'initializeData     | Void      | initialize the class with the folder,datalist, and extention type  |
+'commitPresentData  | Void      |  write the datafile to contain the present data                    |
+'ZgetPresentData    | String()  |  gets the data presently in the folder                             |
+'isAValidFile       | Boolean   |  checks if a file is valid                                         |
+'ZgetDataList       | String()  |  gets the data from the data list                                  |
+'getFilesAdded      | String()  |  gets the files that have been added                               |
+'getFilesRemoved    | String()  |  gets the files that have been removed                             |
+'\---------------------------------------------------------------------------------------------------/
 
 Option Explicit
-
 
 Private mainFolderPath As String
 Private dataListFileName As String
@@ -28,12 +34,9 @@ Private setupHappened As Boolean
 
 Private fileExt As String
 
-' SETUP Valid filetypes
-
-
-
-Public Sub initializeData(Tpath As String, tDatList As String, validExt As String)
-mainFolderPath = Tpath
+Public Sub initializeData(tPath As String, tDatList As String, validExt As String)
+'initialize the class with the folder,datalist, and extention type
+mainFolderPath = tPath
 dataListFileName = tDatList
 setupHappened = True
 fileExt = validExt
@@ -44,13 +47,13 @@ End If
 
 End Sub
 
-
 Public Sub commitPresentData()
+' write the datafile to contain the present data
 Call createTextFromStringArr(ZgetPresentData, mainFolderPath & "\" & dataListFileName)
 End Sub
 
-
 Public Function ZgetPresentData() As String()
+' gets the data presently in the folder
 Dim filesSTR() As String: filesSTR = getFilePathsInFolder2Array(mainFolderPath)
 
 Dim validFiles() As String
@@ -73,12 +76,12 @@ ZgetPresentData = validFiles
 End Function
 
 Private Function isAValidFile(theFilePath As String) As Boolean
+' checks if a file is valid
 If UCase(Right(theFilePath, 4)) = UCase(fileExt) Then isAValidFile = True
 End Function
 
-
 Public Function ZgetDataList() As String()
-
+' gets the data from the data list
 If FileThere(mainFolderPath & "\" & dataListFileName) Then
 ZgetDataList = getTxTDocumentAsString(mainFolderPath & "\" & dataListFileName)
 End If
@@ -86,9 +89,11 @@ End If
 End Function
 
 Public Function getFilesAdded() As String()
+' gets the files that have been added
 getFilesAdded = DifferenceBetweenSets(ZgetPresentData, ZgetDataList)
 End Function
 
 Public Function getFilesRemoved() As String()
+' gets the files that have been removed
 getFilesRemoved = DifferenceBetweenSets(ZgetDataList, ZgetPresentData)
 End Function

@@ -1,6 +1,17 @@
-Attribute VB_Name = "JJJ_ModuleCollections"
+Attribute VB_Name = "CCC_ModuleCollections"
 
 
+
+'/T--CCC_ModuleCollections---------------------------------------------------------------------------------\
+' Function Name           | Return             |  Description                                              |
+'-------------------------|--------------------|-----------------------------------------------------------|
+'getAllModules            | Collection         | retrieve all modules in a workbook                        |
+'getModulesByType         | Collection         |  get all the modules of a certain type within a workbook  |
+'getModuleByName          | VBIDE.VBComponent  |  retrieves a reference to a module object given a name    |
+'getModuleByNameFromWKBK  | VBIDE.VBComponent  |  for a given workbook and modulename, get the module      |
+'combineCollections       | Collection         |  combine two collections into 1                           |
+'ModuleCollection2String  | String()           |  feed in a module collection and get a string array       |
+'\---------------------------------------------------------------------------------------------------------/
 
 
 
@@ -8,6 +19,7 @@ Option Explicit
 
 
 Function getAllModules(theWKBK As Workbook) As Collection
+'retrieve all modules in a workbook
     Dim loc As Collection
     Set loc = getModulesByType(theWKBK, A_NORMAL)
     Set loc = combineCollections(loc, getModulesByType(theWKBK, B_CLASS))
@@ -20,7 +32,7 @@ End Function
 
 
 Function getModulesByType(theWKBK As Workbook, ms As ModuleSpecies) As Collection
-
+' get all the modules of a certain type within a workbook
         Dim VBProj As VBIDE.VBProject: Set VBProj = theWKBK.VBProject
         Dim VBComp As VBIDE.VBComponent
                       
@@ -42,7 +54,7 @@ End Function
 
 
 Function getModuleByName(theCol As Collection, moduleName As String) As VBIDE.VBComponent
-
+' retrieves a reference to a module object given a name
     Dim locMod As VBIDE.VBComponent
 
     If moduleName = "" Then Exit Function
@@ -56,6 +68,7 @@ End Function
 
 
 Function getModuleByNameFromWKBK(theWKBK As Workbook, moduleName As String) As VBIDE.VBComponent
+' for a given workbook and modulename, get the module
     Dim modCol As Collection
     Set modCol = getAllModules(theWKBK)
     
@@ -69,7 +82,7 @@ End Function
 
 
 Function combineCollections(col1 As Collection, col2 As Collection) As Collection
-
+' combine two collections into 1
     Dim i As Integer
     Dim superCol As New Collection
 
@@ -88,7 +101,7 @@ End Function
 
 
 Function ModuleCollection2String(theCollection As Collection) As String()
-    
+' feed in a module collection and get a string array
     Dim VBComp As VBIDE.VBComponent
     Dim locSTR() As String
     Dim n As String: n = 1

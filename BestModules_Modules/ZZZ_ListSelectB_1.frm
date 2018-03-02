@@ -15,15 +15,22 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
-
-
-
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.4
-'$*DATE*2Feb18
+'$*MINOR_VERSION*1.7
+'$*DATE*2/28/2018*xx
 '$*ID*ListSelectB
-'$*CharCount*1110*xxxx
-'$*RowCount*63*xxxxx
+'$*CharCount*1768*xxxx
+'$*RowCount*62*xxxxx
+
+'/T--ZZZ_ListSelectB_1-----------------------------------------------\
+' Function Name       | Return  |  Description                       |
+'---------------------|---------|------------------------------------|
+'getSelectedOption    | String  | etSelectedOption = selectedOption  |
+'setOptionsToSelect   | Void    | ptionsToSelect = theCat            |
+'CButton1_Click       | Void    | electedOption = ComboBox1.Value    |
+'UserForm_Initialize  | Void    | e.Left = 960 / 2                   |
+'UserForm_QueryClose  | Void    | f CloseMode = 0 Then End           |
+'\-------------------------------------------------------------------/
 
 Option Explicit
 
@@ -34,30 +41,22 @@ Function getSelectedOption() As String
 getSelectedOption = selectedOption
 End Function
 
-
 Public Sub setOptionsToSelect(theCat() As String)
 OptionsToSelect = theCat
 Call PopulateComboBoxWithStringArr(Me.ComboBox1, OptionsToSelect)
 
 End Sub
 
-
 Private Sub CButton1_Click()
 selectedOption = ComboBox1.Value
 Me.Hide
 End Sub
 
-
 Private Sub UserForm_Initialize()
 Me.Left = 960 / 2
 End Sub
 
-
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
 If CloseMode = 0 Then End
 End Sub
-
-
-
-
 

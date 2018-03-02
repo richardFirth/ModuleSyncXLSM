@@ -1,39 +1,33 @@
 Attribute VB_Name = "ZZZ_FileAndFolderRetrieval_6"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.2
-'$*DATE*5Feb18
+'$*MINOR_VERSION*1.3
+'$*DATE*2/28/2018*xx
 '$*ID*FileAndFolderRetrieval
-'$*CharCount*12713*xxx
-'$*RowCount*443*xxxx
+'$*CharCount*11316*xxx
+'$*RowCount*357*xxxx
 
+'/T--ZZZ_FileAndFolderRetrieval_6----------------------------------------------------------------------------------------------------\
+' Function Name                 | Return         |  Description                                                                      |
+'-------------------------------|----------------|-----------------------------------------------------------------------------------|
+'getFilesAndFoldersArray        | String()       | gets files and folders as string array                                            |
+'getFilesInFolder2Array         | String()       | gets files as string array                                                        |
+'getFilePathsInFolder2Array     | String()       | gets file path as string array                                                    |
+'getFolderInFolder2Array        | String()       | gets folders as string array                                                      |
+'getDetailFolderTree            | PathAndName()  | gets the pathsAndNames of all levels of folders to an array of pathandName   |    |
+'getNextLevel                   | PathAndName()  |  gets one level of pathsAndNames of all items in the folders in thecurrent level  |
+'DetailgetFilesAndFoldersArray  | PathAndName()  | gets all files and folders in the folder in thecurrent level                      |
+'DetailFilesInFolder2Array      | PathAndName()  |  gets all files in the folder                                                     |
+'DetailFolderInFolder2Array     | PathAndName()  |  gets all folders in the folder                                                   |
+'ConcatenatePathAndName         | PathAndName()  |   concatentaes two pathAndName arrays                                             |
+'PathAndNameArrayHasStuff       | Boolean        | true when there is data in array                                                  |
+'printPathAndNameToColumn       | Void           | prints detail to sheet                                                            |
+'namesFromPaths                 | String()       | returns filenames given paths                                                     |
+'nameFromPath                   | String         | returns filename given path                                                       |
+'ShowHideFilesInFolder          | Void           |  shows or hides files in folder                                                   |
+'showHideFileFolder             | Void           |  helper                                                                           |
+'\-----------------------------------------------------------------------------------------------------------------------------------/
 
 Option Explicit
-
-'/---ZZZ_FileAndFolderRetrieval_6--------updated 5Feb18-------------------------------------------------\
-'  Function Name                   | Return          |   Description                                    |
-'----------------------------------|-----------------|--------------------------------------------------|
-' getFilesAndFoldersArray          | String()        | gets files and folders as string array           |
-' getFilesInFolder2Array           | String()        | gets files as string array                       |
-' getFilePathsInFolder2Array       | String()        | gets filepaths as string array                   |
-' getFolderInFolder2Array          | String()        | gets folders as string array                     |
-' getDetailFolderTree              | PathAndName()   | gets everything in folder structure              |
-' getNextLevel                     | PathAndName()   | gets next level paths and names for each folder  |
-' DetailgetFilesAndFoldersArray    | PathAndName()   | gets pathandname for all files and folders       |
-' DetailFilesInFolder2Array        | PathAndName()   | gets pathandname for all files                   |
-' DetailFolderInFolder2Array       | PathAndName()   | gets pathandname for all folders                 |
-' ConcatenatePathAndName           | PathAndName()   | concatentaes two pathAndName arrays              |
-' PathAndNameArrayHasStuff         | boolean         | true when there is data in array                 |
-' printPathAndNameToColumn         | void            | prints detail to sheet                           |
-' namesFromPaths                   | String()        | returns filenames given paths                    |
-' nameFromPath                     | String          | returns filename given path                      |
-' ShowHideFilesInFolder            | void            | shows or hides files in a folder                 |
-' private showHideFileFolder       | void            | used by ShowHideFilesInFolder for looping        |
-'\------------------------------------------------------------------------------------------------------/
-
-'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-'@@@ Depends on ZZZ_StringArrayFunctions_5 @@@
-'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 
 Type PathAndName
 A_Path As String
@@ -50,28 +44,18 @@ D_HideAllExcept
 E_HideThese
 End Enum
 
-
-' /------------------------------------------------------\
-' |gets files and folders as string array                |
-' \------------------------------------------------------/
 Public Function getFilesAndFoldersArray(theFolder As String) As String()
+'gets files and folders as string array
 getFilesAndFoldersArray = ConcatenateArrays(getFilesInFolder2Array(theFolder), getFolderInFolder2Array(theFolder))
 End Function
 
-
-
-' /------------------------------------------\
-' |gets files as string array                |
-' \------------------------------------------/
 Public Function getFilesInFolder2Array(theFolder As String) As String()
+'gets files as string array
 getFilesInFolder2Array = namesFromPaths(getFilePathsInFolder2Array(theFolder))
 End Function
 
-' /----------------------------------------------\
-' |gets file path as string array                |
-' \----------------------------------------------/
 Public Function getFilePathsInFolder2Array(theFolder As String) As String()
-
+'gets file path as string array
 Dim findToolsFSO As Object
 Set findToolsFSO = CreateObject("Scripting.FileSystemObject") 'Create an instance of the FileSystemObject
 Dim objFolder_CM As Object
@@ -95,13 +79,8 @@ getFilePathsInFolder2Array = locFiles
 
 End Function
 
-
-
-' /--------------------------------------------\
-' |gets folders as string array                |
-' \--------------------------------------------/
 Public Function getFolderInFolder2Array(theFolder As String) As String()
-
+'gets folders as string array
 Dim findToolsFSO As Object
 Set findToolsFSO = CreateObject("Scripting.FileSystemObject") 'Create an instance of the FileSystemObject
 
@@ -111,7 +90,6 @@ Set objFolder_CM = findToolsFSO.GetFolder(theFolder) 'Get the folder object
 'loops through each file in the directory and prints their names and path
 
 Dim x As Integer
-
 
 x = 1
 Dim locFolders() As String
@@ -129,14 +107,8 @@ getFolderInFolder2Array = locFolders
 
 End Function
 
-
-
-' /++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\
-' | gets the pathsAndNames of all levels of folders to an array of pathandName   |
-' |                                                                              |
-' \++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++/
 Public Function getDetailFolderTree(theFolder As String) As PathAndName()
-
+'gets the pathsAndNames of all levels of folders to an array of pathandName   |
 
 Dim thisLevel() As PathAndName
 Dim nextLevel() As PathAndName
@@ -170,11 +142,8 @@ getDetailFolderTree = totalFilesAndFolders
 
 End Function
 
-' /------------------------------------------------------------------------------------\
-' | gets one level of pathsAndNames of all items in the folders in thecurrent level    |
-' \------------------------------------------------------------------------------------/
 Public Function getNextLevel(currentLevel() As PathAndName) As PathAndName()
-
+' gets one level of pathsAndNames of all items in the folders in thecurrent level
 Dim nextLvL() As PathAndName
 Dim x As Integer
 For x = LBound(currentLevel) To UBound(currentLevel)
@@ -187,22 +156,13 @@ getNextLevel = nextLvL
 
 End Function
 
-
-
-' /-----------------------------------------------------------------\
-' | gets all files and folders in the folder in thecurrent level    |
-' \-----------------------------------------------------------------/
 Public Function DetailgetFilesAndFoldersArray(theFolder As String) As PathAndName()
+'gets all files and folders in the folder in thecurrent level
 DetailgetFilesAndFoldersArray = ConcatenatePathAndName(DetailFilesInFolder2Array(theFolder), DetailFolderInFolder2Array(theFolder))
 End Function
 
-
-
-' /----------------------------------\
-' | gets all files in the folder     |
-' \----------------------------------/
 Public Function DetailFilesInFolder2Array(theFolder As String) As PathAndName()
-
+' gets all files in the folder
 Dim findToolsFSO As Object
 Set findToolsFSO = CreateObject("Scripting.FileSystemObject") 'Create an instance of the FileSystemObject
 Dim objFolder_CM As Object
@@ -232,13 +192,8 @@ DetailFilesInFolder2Array = locFiles
 
 End Function
 
-
-
-' /------------------------------------\
-' | gets all folders in the folder     |
-' \------------------------------------/
 Public Function DetailFolderInFolder2Array(theFolder As String) As PathAndName()
-
+' gets all folders in the folder
 Dim findToolsFSO As Object
 Set findToolsFSO = CreateObject("Scripting.FileSystemObject") 'Create an instance of the FileSystemObject
 
@@ -248,7 +203,6 @@ Set objFolder_CM = findToolsFSO.GetFolder(theFolder) 'Get the folder object
 'loops through each file in the directory and prints their names and path
 
 Dim x As Integer
-
 
 x = 1
 Dim locFolders() As PathAndName
@@ -268,13 +222,8 @@ DetailFolderInFolder2Array = locFolders
 
 End Function
 
-
-
-' /-------------------------------------\
-' | concatentaes two pathAndName arrays |
-' \-------------------------------------/
 Public Function ConcatenatePathAndName(theArray1() As PathAndName, theArray2() As PathAndName) As PathAndName()
-
+'  concatentaes two pathAndName arrays
 Dim newArr() As PathAndName
 
 Dim n As Integer: n = 1
@@ -301,25 +250,15 @@ ConcatenatePathAndName = newArr
 
 End Function
 
-
-
-
-' /------------------------------------------------\
-' |true when there is data in array                |
-' \------------------------------------------------/
 Public Function PathAndNameArrayHasStuff(theArr() As PathAndName) As Boolean
-
+'true when there is data in array
 'https://stackoverflow.com/questions/206324/how-to-check-for-empty-array-in-vba-macro
 If (Not Not theArr) <> 0 Then PathAndNameArrayHasStuff = True
 
 End Function
 
-
-' /--------------------------------------\
-' |prints detail to sheet                |
-' \--------------------------------------/
 Public Sub printPathAndNameToColumn(theArr() As PathAndName, theSheet As Worksheet, theCol As Integer)
-
+'prints detail to sheet
 
 Dim x As Integer: Dim n As Integer
 n = 2
@@ -339,15 +278,10 @@ n = n + 1
 Next x
 End With
 
-
 End Sub
 
-
-' /--------------------------------------\
-' |returns filenames given paths         |
-' \--------------------------------------/
 Public Function namesFromPaths(thePaths() As String) As String()
-
+'returns filenames given paths
 Dim locPaths() As String
 Dim x As Integer
 Dim n As Integer: n = 1
@@ -361,13 +295,8 @@ namesFromPaths = locPaths
 
 End Function
 
-
-
-' /--------------------------------------\
-' |returns filename given path           |
-' \--------------------------------------/
 Public Function nameFromPath(thePath As String) As String
-
+'returns filename given path
 Dim SplitPath() As String
 SplitPath = Split(thePath, "\")
 
@@ -375,14 +304,8 @@ nameFromPath = SplitPath(UBound(SplitPath))
 
 End Function
 
-
-
-
-' /----------------------------------------------\
-' |shows and hides files and folders for a path  |
-' \----------------------------------------------/
 Public Sub ShowHideFilesInFolder(theFolder As String, theFiles() As String, theConfig As ShowHideConfig)
-
+' shows or hides files in folder
 Dim findToolsFSO As Object
 Set findToolsFSO = CreateObject("Scripting.FileSystemObject") 'Create an instance of the FileSystemObject
 
@@ -398,18 +321,16 @@ Call showHideFileFolder(objFile_CM, theFiles, theConfig)
 
 Next objFile_CM
 
-
 For Each objFile_CM In objFolder_CM.SubFolders
 
 Call showHideFileFolder(objFile_CM, theFiles, theConfig)
 
 Next objFile_CM
 
-
 End Sub
 
 Private Sub showHideFileFolder(theItem As Object, theFiles() As String, theConfig As ShowHideConfig)
-
+' helper
 If theConfig = A_ShowAll Then theItem.Attributes = 0 ' show
 If theConfig = B_HideAll Then theItem.Attributes = 2 ' hide
 If theConfig = C_ShowAllExcept Then
@@ -431,12 +352,5 @@ If theConfig = E_HideThese Then
 If stringInArray(theItem.Name, theFiles) Then theItem.Attributes = 2
 End If
 
-
 End Sub
-
-
-
-
-
-
 

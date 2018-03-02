@@ -1,37 +1,31 @@
 Attribute VB_Name = "ZZZ_StringLookupTables_3"
 '$VERSIONCONTROL
 '$*MINOR_VERSION*1.1
-'$*DATE*18Jan18
+'$*DATE*2/28/2018*xx
 '$*ID*StringLookupTables
-'$*CharCount*2037*xxxx
-'$*RowCount*79*xxxxx
+'$*CharCount*1915*xxxx
+'$*RowCount*70*xxxxx
 
-
-'/---ZZZ_StringLookupTables_2----------------------------------------------------\
-'  Function Name                   | Return          |   Description                         |
-'-----------------------------     |-----------------|---------------------------------------|
-'" getLookupValue(theLookupTable | String
-' |    |"
-' LookupForcolumn(theColumn | void |    |
-'\---------------------------------------------------------------------------------/
-
-
+'/T--ZZZ_StringLookupTables_3--------------\
+' Function Name   | Return             |  Description|
+'-----------------|--------------------|---|
+'getLookupTable   | StringLookupTable  |   |
+'getLookupValue   | String             |   |
+'LookupForcolumn  | Void               |   |
+'\-----------------------------------------/
 
 Option Explicit
-
 
 Public Type StringLookupTable
 A_inputKEY() As String
 B_OutputKEY() As String
 End Type
 
-
 Public Function getLookupTable(theSheet As Worksheet, theColumn As Integer) As StringLookupTable
 
 Dim locLookup As StringLookupTable
 Dim locInputKey() As String
 Dim locOutputKey() As String
-
 
 With theSheet
 Dim x As Long
@@ -50,7 +44,6 @@ getLookupTable = locLookup
 
 End Function
 
-
 Public Function getLookupValue(theLookupTable As StringLookupTable, theInputKey As String) As String
 
 Dim x As Integer
@@ -60,7 +53,6 @@ Next x
 getLookupValue = "Not Found"
 
 End Function
-
 
 Public Sub LookupForcolumn(theColumn As Integer, theWorksheet As Worksheet, thelookup As StringLookupTable)
 
@@ -74,5 +66,4 @@ Next x
 End With
 
 End Sub
-
 

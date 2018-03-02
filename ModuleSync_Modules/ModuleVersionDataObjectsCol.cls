@@ -16,36 +16,32 @@ Option Explicit
 
 
 
-'/------ModuleVersionDataObjectsCol-------------------------------------------------------------------------------------------------------------------------\
-' Factory Function: createHeaderObjectsCollection(tPaths() As String) As ModuleVersionDataObjectsCol                                                        |
-'-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-'  Function Name                     | Return          |   Description                                                                                      |
-'------------------------------------|-----------------|----------------------------------------------------------------------------------------------------|
-' setModuleVersionDataObjects               | void            | sets the theModuleVersionDataObjects collection                                             |
-' getTotalPaths                      | String()        | gets the workbook paths from each HeaderDataObject                                                 |
-' getTotalNames                      | String()        | gets workbook names                                                                                |
-' getPathsWithData                   | String()        | for use with UI                                                                                    |
-' identifyAllOldModules          | void            | gets newestData() and calls identifyOldModuleVersions in each ModuleVersionDataObject                     |
-' displayHeaderObjectData            | void            | populates Data to excel sheet by calling printHeaderToColumn in each ModuleVersionDataObject       |
-' updateToLatestVersions             | void            | calls updateToNewest in each ModuleVersionDataObject                                               |
+'/T--ModuleVersionDataObjectsCol-----------------------------------------------------------------------------------------------\
+' Function Name               | Return                   |  Description                                                        |
+'-----------------------------|--------------------------|---------------------------------------------------------------------|
+'----- Setters and getters       |---------------------------------------------------------------------------------------------|
+'setModuleVersionDataObjects  | Void                     |  sets the module version data ojects                                |
+'getTotalNames                | String()                 |  gives the names of the workbooks                                   |
+'getTotalPaths                | String()                 |  gets the workbook paths from each HeaderDataObject                 |
+'getModuleVDataObjByName      | ModuleVersionDataObject  |  gets a module version data object by it's name                     |
+'----- New Module Identification  |--------------------------------------------------------------------------------------------|
+'identifyAllOldModules        | Void                     |  identify all old modules                                           |
+'populateNewestVersions       | Void                     |  populates Newest Versions of modules                               |
+'getUniqueID                  | String()                 |  unknown                                                            |
+'getNewestVersion             | ModuleVersionData        |  for a given ID, find the newest version of it among versions       |
+'newerVersion                 | Boolean                  |  check if a version is newer than another version                   |
+'----- Module Modification        |--------------------------------------------------------------------------------------------|
+'updateToLatestVersions       | Void                     |  update modules in each workbook to latest versions                 |
+'----- Aceept Changes Modification        |------------------------------------------------------------------------------------|
+'acceptRejectChangesInWKBK    | Void                     |  accepts or rejects the changes for all modules in a workbook       |
+'acceptRejectChangesInModule  | Void                     |  accepts or rejects the changes for a single modules in a workbook  |
+'----- UI/UX methods             |---------------------------------------------------------------------------------------------|
+'makeModuleDisplayByWKBK      | String()                 |                                                                     |
+'-----Print data to sheet        |---------------------------------------------------------------------------------------------|
+'refrestAndReprintAll         | Void                     |                                                                     |
+'displayHeaderObjectData      | Void                     | all clearWorkSpace(theSheet, 1, 6)                                  |
+'\-----------------------------------------------------------------------------------------------------------------------------/
 
-
-
-' setModVData                  | void                    | sets myData ModuleVersionData                                    |
-' getHeader                  | ModuleVersionData()    | gets myData ModuleVersionData                                    |
-
-' getSize                    | Integer         | gets size of ModuleVersionData() array                           |
-' getIDS                     | String()        | gets IDs from within ModuleVersionData() array                   |
-' FlagNewIDS                 | void            | flags ModuleVersionData that has new IDS                         |
-' updateToNewest             | void            | opens the workbook, and updates modules to latest versions|
-' identifyOldModuleVersions         | void            | checks if headers are the newest version                  |
-' printHeaderToColumn        | void            | Prints data to excel sheet                                |
-'-----Private----------------|-----------------|-----------------------------------------------------------|
-' populateNewestVersions     | void            | fills newestData() with one of each ModuleVersionData  that contain latest versions  |
-' getNewModules               | String          | adds an '!' for each modules not found in myNewestData    |                |
-' NewestModulePathGivenID    | String          | given an ID, finds a filepath in myNewestData for the ID  |
-' testForNewest              | Boolean         | tests if a module is the newesr                           |
-'\---------------------------------------------------------------------------------------------------------/
 
 
 Private theModuleVersionDataObjects As Collection
@@ -53,17 +49,25 @@ Private newestData() As ModuleVersionData ' represents the newest version of eac
 
 
 
-' /===========================\
-' |Setters and getters        |
-' \===========================/
+'/===========================\
+'# Setters and getters
+'\===========================/
+
+Public Sub setModuleVersionDataObjects(theHDataCol As Collection)
+' sets the module version data ojects
+Set theModuleVersionDataObjects = theHDataCol
+End Sub
 
 
-Public Sub setModuleVersionDataObjects(theHDataCol As Collection):    Set theModuleVersionDataObjects = theHDataCol: End Sub
 
+Public Function getTotalNames() As String()
+' gives the names of the workbooks
+getTotalNames = namesFromPaths(getTotalPaths)
+End Function
 
-Public Function getTotalNames() As String():    getTotalNames = namesFromPaths(getTotalPaths): End Function
 
 Public Function getTotalPaths() As String()
+' gets the workbook paths from each HeaderDataObject
     Dim totalPaths() As String
     Dim aHeaderObject As ModuleVersionDataObject
     
@@ -76,6 +80,7 @@ End Function
 
 
 Public Function getModuleVDataObjByName(tName) As ModuleVersionDataObject
+' gets a module version data object by it's name
     Dim aHeaderObject As ModuleVersionDataObject
     
     For Each aHeaderObject In theModuleVersionDataObjects
@@ -85,16 +90,18 @@ Public Function getModuleVDataObjByName(tName) As ModuleVersionDataObject
 End Function
 
 
-' /===========================\
-' |New Module Identification  |
-' \===========================/
+'/============================\
+'# New Module Identification
+'\============================/
 
 Public Sub identifyAllOldModules()
+' identify all old modules
     Dim myHD As ModuleVersionDataObject
     Dim mainV() As String ' main versions
     Dim processToNewestData() As ModuleVersionData
+    
         For Each myHD In theModuleVersionDataObjects
-            processToNewestData = ConcatenateModuleVersionData(processToNewestData, myHD.getHeader)
+            processToNewestData = ConcatenateModuleVersionData(processToNewestData, myHD.getLatestModuleData)
             If nameFromPath(myHD.getWKBKPath) = BestModules Then mainV = myHD.getIDS
         Next myHD
         
@@ -106,30 +113,34 @@ Public Sub identifyAllOldModules()
         Next myHD
 End Sub
 
-    Private Sub populateNewestVersions(processToNewestData() As ModuleVersionData)
-        Dim ids() As String:  ids = getUniqueID(processToNewestData)
-        Dim x As Integer
-        Dim bestVersions() As ModuleVersionData
-        Dim n As Integer: n = 1
-        For x = LBound(ids) To UBound(ids)
-            ReDim Preserve bestVersions(1 To n) As ModuleVersionData
-            bestVersions(n) = getNewestVersion(ids(x), processToNewestData)
-            n = n + 1
-        Next x
-        newestData = bestVersions
-    End Sub
+Private Sub populateNewestVersions(processToNewestData() As ModuleVersionData)
+' populates Newest Versions of modules
+
+    Dim ids() As String:  ids = getUniqueID(processToNewestData)
+    Dim x As Integer
+    Dim bestVersions() As ModuleVersionData
+    Dim n As Integer: n = 1
+    For x = LBound(ids) To UBound(ids)
+        ReDim Preserve bestVersions(1 To n) As ModuleVersionData
+        bestVersions(n) = getNewestVersion(ids(x), processToNewestData)
+        n = n + 1
+    Next x
+    newestData = bestVersions
+    
+End Sub
     
         
         Private Function getUniqueID(Arr() As ModuleVersionData) As String()
+        ' gets the total number of unique ID's from an array of moduleVersionData
         Dim x As Integer:        Dim n As Integer: n = 1
         Dim midArr() As String
 
         If Not ModuleVersionDataHasStuff(Arr) Then GoTo getUniqueIDError:
         
         For x = LBound(Arr) To UBound(Arr) ' error here
-        If Arr(x).H_ID <> "" Then
+        If Arr(x).D_ID <> "" Then
             ReDim Preserve midArr(1 To n) As String
-            midArr(n) = Arr(x).H_ID
+            midArr(n) = Arr(x).D_ID
             n = n + 1
         End If
         Next x
@@ -137,42 +148,52 @@ End Sub
         getUniqueID = removeDupesStringArray(midArr)
     Exit Function
 getUniqueIDError:
-Dim errSTR(1 To 2) As String
-errSTR(1) = "ERR"
-       Call reportError("getUniqueID", errSTR)
+Dim ERRSTR(1 To 2) As String
+ERRSTR(1) = "ERR"
+       Call reportError("getUniqueID", ERRSTR)
     
     End Function
 
     
-    ' for a given ID, find the newest version of it among versions
+    
     Private Function getNewestVersion(id As String, Arr() As ModuleVersionData) As ModuleVersionData
+    ' for a given ID, find the newest version of it among versions
         Dim x As Integer
         
         Dim latestMajor As Integer: latestMajor = 0
         Dim latestMinor As Double: latestMinor = 0
+        Dim bestDate As Date: bestDate = #1/31/2018#
         
         Dim newV As ModuleVersionData
         
         For x = LBound(Arr) To UBound(Arr)
-            If Arr(x).H_ID = id Then
-                If newerVersion(Arr(x).B_MajorVersion, Arr(x).C_MinorVersion, latestMajor, latestMinor) Then
-                    latestMajor = Arr(x).B_MajorVersion
-                    latestMinor = Arr(x).C_MinorVersion
+            If Arr(x).D_ID = id Then
+                If newerVersion(Arr(x), latestMajor, latestMinor, bestDate) Then
+                    latestMajor = Arr(x).E_MajorVersion
+                    latestMinor = Arr(x).F_MinorVersion
+                    bestDate = Arr(x).G_date
                     newV = Arr(x)
                 End If
             End If
         Next x
         getNewestVersion = newV
     End Function
+    
+    
+    
+    Private Function newerVersion(tVer As ModuleVersionData, bestMajor As Integer, bestMinor As Double, bestDate As Date) As Boolean
     ' check if a version is newer than another version
-    Private Function newerVersion(tMajor As String, tMinor As String, bestMajor As Integer, bestMinor As Double) As Boolean
         On Error GoTo BADNewerVersion
-        Dim testMajor As Integer: testMajor = CInt(tMajor)
-        Dim testMinor As Double: testMinor = CDbl(tMinor)
+        Dim testMajor As Integer: testMajor = CInt(tVer.E_MajorVersion)
+        Dim testMinor As Double: testMinor = CDbl(tVer.F_MinorVersion)
+        Dim testdate As Date: testdate = CDate(tVer.G_date)
+        
         If testMajor > bestMajor Then newerVersion = True: Exit Function
         If testMajor < bestMajor Then newerVersion = False: Exit Function
         If testMinor > bestMinor Then newerVersion = True
+        If testdate > bestDate Then newerVersion = True
     Exit Function
+    
 BADNewerVersion:
             newerVersion = False
     End Function
@@ -180,12 +201,12 @@ BADNewerVersion:
 
 
 
-' /===========================\
-' | Module Modification       |
-' \===========================/
+'/===========================\
+'# Module Modification        |
+'\===========================/
 
 Public Sub updateToLatestVersions()
-
+' update modules in each workbook to latest versions
     Dim tPaths() As String
     Dim n As Integer: n = 1
     Dim aHDataObj As ModuleVersionDataObject
@@ -198,7 +219,7 @@ Public Sub updateToLatestVersions()
         tPaths(n) = aHDataObj.getWKBKPath
         n = n + 1
     Next aHDataObj
-       
+    refrestAndReprintAll
   Else
     MsgBox "Not Initialised"
   End If
@@ -206,12 +227,13 @@ Public Sub updateToLatestVersions()
 End Sub
 
 
-' /===================================\
-' | Aceept Changes Modification       |
-' \===================================/
+'/===================================\
+'# Aceept Changes Modification        |
+'\===================================/
 
 
 Public Sub acceptRejectChangesInWKBK(tName As String, accept As Boolean)
+' accepts or rejects the changes for all modules in a workbook
     Dim theOB As ModuleVersionDataObject
     Set theOB = getModuleVDataObjByName(tName)
     If theOB Is Nothing Then GoTo acceptRejectChangeInWKBKERR
@@ -222,9 +244,10 @@ Public Sub acceptRejectChangesInWKBK(tName As String, accept As Boolean)
 Exit Sub
 acceptRejectChangeInWKBKERR:
     
-Dim tErr(1 To 2) As String
-    tErr(1) = tName
-Call reportError("acceptRejectChangesInWKBK", tErr)
+Dim tERR(1 To 2) As String
+    tERR(1) = tName
+    tERR(2) = "Object is nothing"
+Call reportError("acceptRejectChangesInWKBK", tERR)
     
 End Sub
 
@@ -232,6 +255,7 @@ End Sub
 
 
 Public Sub acceptRejectChangesInModule(tName As String, tModName As String, accept As Boolean)
+' accepts or rejects the changes for a single modules in a workbook
     Dim theOB As ModuleVersionDataObject
     Set theOB = getModuleVDataObjByName(tName)
     If theOB Is Nothing Then GoTo acceptRejectChangesInModuleERR
@@ -242,10 +266,30 @@ Public Sub acceptRejectChangesInModule(tName As String, tModName As String, acce
 Exit Sub
 acceptRejectChangesInModuleERR:
     
-Dim tErr(1 To 2) As String
-    tErr(1) = tName
-    tErr(2) = tModName
-Call reportError("acceptRejectChangesInModule", tErr)
+Dim tERR(1 To 2) As String
+    tERR(1) = tName
+    tERR(2) = tModName
+Call reportError("acceptRejectChangesInModule", tERR)
+    
+End Sub
+
+
+Public Sub UpdateTablesInWKBK(tName As String)
+' updates all tables in wkbk
+    Dim theOB As ModuleVersionDataObject
+    Set theOB = getModuleVDataObjByName(tName)
+    If theOB Is Nothing Then GoTo UpdateTablesInWKBK
+    
+    Call theOB.updateAllTables
+    refrestAndReprintAll
+
+Exit Sub
+UpdateTablesInWKBK:
+    
+Dim tERR(1 To 2) As String
+    tERR(1) = tName
+    tERR(2) = "Object is nothing"
+Call reportError("UpdateTablesInWKBK", tERR)
     
 End Sub
 
@@ -253,12 +297,9 @@ End Sub
 
 
 
-
-
-
-' /===========================\
-' |UI/UX methods              |
-' \===========================/
+'/===========================\
+'# UI/UX methods             |
+'\===========================/
 
     
 Public Function makeModuleDisplayByWKBK(wkbkName As String) As String()
@@ -274,17 +315,19 @@ Next aHDataObj
 End Function
     
 
-' /===========================\
-' |Print data to sheet        |
-' \===========================/
+'/===========================\
+'#Print data to sheet        |
+'\===========================/
 
 
 Public Sub refrestAndReprintAll()
- Dim theHobj As ModuleVersionDataObject
+
+    Dim theHobj As ModuleVersionDataObject
 
     For Each theHobj In theModuleVersionDataObjects
-       Call theHobj.refreshModVerData
+       Call theHobj.refreshModuleDataFromTXT
     Next theHobj
+    
     Call identifyAllOldModules
     Call displayHeaderObjectData(ThisWorkbook.Sheets(1))
     

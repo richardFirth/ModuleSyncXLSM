@@ -22,21 +22,17 @@ Public Const BestModules As String = "BestModules.xlsm"
 
 Public Type ModuleVersionData
     A_Name As String
-    B_MajorVersion As String
-    C_MinorVersion As String
-    D_date As String
+    B_ModulePath As String
+    C_Vcontrol As Boolean
     
-    E_Vcontrol As Boolean
-    F_ModulePath As String
-    G_OldVersion As Boolean
-    H_ID As String
-    
+    D_ID As String
+    E_MajorVersion As String
+    F_MinorVersion As String
+    G_date As String
+
+    H_OldVersion As Boolean
     I_newModule As Boolean
-    
     J_CodeChange As Boolean
-    
-    KK_TEMP As Boolean
-    
 End Type
 
 Public Enum ModuleSpecies
@@ -47,13 +43,14 @@ End Enum
 
 
 Sub EraseExportedFolder()
-    'MsgBox "Erase ModuleSyncOutput"
+    'erases the folder in the temp area
     Dim tFolder As String: tFolder = folderToPlaceData & "\ModuleSyncOutput"
     If FolderThere(tFolder) Then Call DeleteFolderTreeRF(tFolder)
     
 End Sub
 
 Function folderToPlaceData() As String
+    ' fetches the folder path to deposit module data
     If StoreFilesOnDesktop Then
         folderToPlaceData = CreateObject("WScript.Shell").SpecialFolders("Desktop")
     Else
@@ -61,3 +58,13 @@ Function folderToPlaceData() As String
     End If
 End Function
 
+
+Sub testdate()
+
+Dim dTest As String: dTest = "11Feb2018"
+
+ '   Dim bestDate As Date: bestDate = DateValue(dTest)
+
+    MsgBox Date
+
+End Sub

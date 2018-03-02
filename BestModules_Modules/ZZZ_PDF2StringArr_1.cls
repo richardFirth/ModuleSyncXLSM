@@ -8,22 +8,26 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.3
-'$*DATE*15Feb18
+'$*MINOR_VERSION*1.5
+'$*DATE*2/28/2018*xx
 '$*ID*pdf2string
-'$*CharCount*1417*xxxx
-'$*RowCount*75*xxxxx
+'$*CharCount*1938*xxxx
+'$*RowCount*77*xxxxx
 
 ' requires Microsoft Word 16.0 Object Library
 
+'/T--ZZZ_PDF2StringArr_1--------------------------------------------\
+' Function Name                  | Return  |  Description           |
+'--------------------------------|---------|------------------------|
+'setDataFromPDFAsString          | Void    |                        |
+'retrieveFullSTRFromPartial      | String  |  gets PDF as a string  |
+'retrieveNextFullSTRFromPartial  | String  |  unknown               |
+'\------------------------------------------------------------------/
 
 Option Explicit
 
-
 Private theObjWord As New Word.Application
 Private theData() As String
-
-
 
 Public Sub setDataFromPDFAsString(theFormPath As String)
 
@@ -35,7 +39,6 @@ theObjWord.Documents.Open theFormPath
 
 Dim certPDFDoc As Word.Document
 Set certPDFDoc = theObjWord.ActiveDocument
-
 
 Dim Arr() As String
 Arr = Split(certPDFDoc.Content.Text, Chr(13))
@@ -50,9 +53,8 @@ getDataError:
 
 End Sub
 
-
-
 Public Function retrieveFullSTRFromPartial(theT As String) As String
+' gets PDF as a string
 Dim x As Integer
 
 For x = LBound(theData) To UBound(theData)
@@ -62,8 +64,8 @@ Next x
 
 End Function
 
-
 Public Function retrieveNextFullSTRFromPartial(theT As String) As String
+' unknown
 Dim x As Integer
 
 For x = LBound(theData) To UBound(theData)

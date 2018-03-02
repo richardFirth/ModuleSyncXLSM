@@ -1,37 +1,35 @@
 Attribute VB_Name = "ZZZ_FileInteraction_4"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.3
-'$*DATE*8Feb18
+'$*MINOR_VERSION*1.4
+'$*DATE*2/28/2018*xx
 '$*ID*FileInteraction
-'$*CharCount*7748*xxxx
-'$*RowCount*298*xxxx
+'$*CharCount*7070*xxxx
+'$*RowCount*235*xxxx
 
+'/T--ZZZ_FileInteraction_4--------------------------------------------------------\
+' Function Name          | Return    |  Description                               |
+'------------------------|-----------|--------------------------------------------|
+'----- Directory interactions-----------------------------------------------------|
+'CopyFileRF              | Boolean   | copies a file                              |
+'MoveFileRF              | Boolean   | moves a file                               |
+'DeleteFileRF            | Boolean   | deletes a file                             |
+'DeleteFolderRF          | Boolean   | deletes a folder and its contents          |
+'DeleteFolderTreeRF      | Boolean   | Delete all files and subfolders            |
+'RenameFileRF            | Boolean   | renames a file                             |
+'createFolderOnDesktop   | Boolean   | creates a directory on desktop             |
+'createDirectoryRF       | Boolean   | creates a directory                        |
+'FolderThere             | Boolean   | checks if a folder is present              |
+'FileThere               | Boolean   | checks if a file is present                |
+'----- Browsing to files----------------------------------------------------------|
+'setDefaultDirToOpen     | String)   |  changes where browse starts               |
+'BrowseToMacro           | Workbook  |  browse to an excel macro                  |
+'BrowseFilePath          | String    | Gets path of text file for importing data  |
+'BrowseFilePaths         | String()  | Browse to many paths                       |
+'browse4type             | String    | Browse to one paths                        |
+'ConvertVariantToSTRArr  | String()  |  Converts variants to string arr           |
+'\--------------------------------------------------------------------------------/
 
 Option Explicit
-
-'/---ZZZ_FileInteraction_4-----------------updated 6Feb18-------------------------------------\
-'  Function Name         | Return          |   Description                                    |
-'------------------------|-----------------|--------------------------------------------------|
-' CopyFileRF             | Boolean         | copies a file                                    |
-' MoveFileRF             | Boolean         | moves a file                                     |
-' DeleteFileRF           | Boolean         | deletes a file                                   |
-' DeleteFolderRF         | Boolean         | deletes a folder (with all its files)            |
-' DeleteFolderTreeRF     | Boolean         | deletes a folder tree                            |
-' RenameFileRF           | Boolean         | renames a file                                   |
-' createFolderOnDesktop  | Boolean         | creates a directory on desktop                   |
-' createDirectoryRF      | Boolean         | creates a directory                              |
-' FolderThere            | Boolean         | checks if a folder is present                    |
-' FileThere              | Boolean         | checks if a file is present                      |
-' setDefaultDirToOpen    | void            | set default folder for browser                   |
-' BrowseToMacro          | Workbook        | browse to, open, and return a workbook object    |
-' BrowseFilePath         | String          | gets a single file path                          |
-' BrowseFilePaths        | String()        | gets multiple file paths                         |
-' Private browse4type    | String          | internal, gets the type to browse for            |
-' ConvertVariantToSTRArr | String()        | turns variant array into string array            |
-'\--------------------------------------------------------------------------------------------/
-
-
-
 
 Public Enum getFileType
 A_CSV
@@ -47,13 +45,10 @@ J_BRD
 K_SCH
 End Enum
 
+'# Directory interactions
 
-
-' /------------------\
-' |copies a file     |
-' \------------------/
 Public Function CopyFileRF(source As String, destination As String) As Boolean
-
+'copies a file
 On Error GoTo CopyFileRF_Fail
 FileCopy source, destination
 CopyFileRF = True
@@ -63,12 +58,8 @@ CopyFileRF_Fail:
 CopyFileRF = False
 End Function
 
-
-' /------------------\
-' |moves a file      |
-' \------------------/
 Public Function MoveFileRF(source As String, destination As String) As Boolean
-
+'moves a file
 On Error GoTo MoveFileRF_Fail
 
 If CopyFileRF(source, destination) Then
@@ -81,11 +72,8 @@ MoveFileRF_Fail:
 MoveFileRF = False
 End Function
 
-' /-------------------\
-' |delete a file      |
-' \-------------------/
 Public Function DeleteFileRF(thePath As String) As Boolean
-'You can use this to delete all the files in the folder Test
+'deletes a file
 On Error GoTo DeleteFileRF_Fail
 Kill thePath
 DeleteFileRF = True
@@ -94,12 +82,8 @@ DeleteFileRF_Fail:
 DeleteFileRF = False
 End Function
 
-' /---------------------\
-' |delete a folder      |
-' \---------------------/
 Public Function DeleteFolderRF(thePath As String) As Boolean
-'You can use this to delete the whole folder
-'Note: RmDir delete only a empty folder
+'deletes a folder and its contents
 On Error GoTo DeleteFolderRF_Fail
 Kill thePath & "\*.*"    ' delete all files in the folder
 RmDir thePath  ' delete folder
@@ -109,18 +93,12 @@ DeleteFolderRF_Fail:
 DeleteFolderRF = False
 End Function
 
-
-
-' /-------------------------\
-' |delete a folder tree     |
-' \-------------------------/
 Public Function DeleteFolderTreeRF(thePath As String) As Boolean
 'Delete all files and subfolders
 'Be sure that no file is open in the folder
 Dim FSO As Object
 
 Set FSO = CreateObject("scripting.filesystemobject")
-
 
 If Right(thePath, 1) = "\" Then
 thePath = Left(thePath, Len(thePath) - 1)
@@ -137,33 +115,18 @@ On Error GoTo 0
 DeleteFolderTreeRF = True
 End Function
 
-
-
-
-
-' /-----------------------\
-' |renames a file         |
-' \-----------------------/
 Public Function RenameFileRF(source As String, destination As String) As Boolean
+'renames a file
 RenameFileRF = MoveFileRF(source, destination)
 End Function
 
-
-
-' /----------------------------------\
-' |creates a directory on desktop    |
-' \----------------------------------/
 Public Function createFolderOnDesktop(ByVal dirName As String) As Boolean
+'creates a directory on desktop
 createFolderOnDesktop = createDirectoryRF(CreateObject("WScript.Shell").SpecialFolders("Desktop") & "\" & dirName)
 End Function
 
-
-
-' /----------------------\
-' |creates a directory   |
-' \----------------------/
 Public Function createDirectoryRF(ByVal dirName As String) As Boolean
-
+'creates a directory
 On Error GoTo noFolder
 MkDir dirName
 On Error GoTo 0
@@ -175,16 +138,8 @@ noFolder:
 createDirectoryRF = False
 End Function
 
-
-
-
-
-
-' /--------------------------------\
-' |checks if a folder is present   |
-' \--------------------------------/
 Public Function FolderThere(folderPathToTest As String) As Boolean
-
+'checks if a folder is present
 If folderPathToTest = "" Then FolderThere = False: Exit Function
 If Len(Dir(folderPathToTest, vbDirectory)) = 0 Then
 FolderThere = False
@@ -192,16 +147,10 @@ Else
 FolderThere = True
 End If
 
-
 End Function
 
-
-
-' /-------------------------------\
-' |checks if a file is present    |
-' \-------------------------------/
 Public Function FileThere(theFileNameToTest As String) As Boolean
-
+'checks if a file is present
 If theFileNameToTest = "" Then FileThere = False: Exit Function
 If Len(Dir(theFileNameToTest)) = 0 Then
 FileThere = False
@@ -211,19 +160,18 @@ End If
 
 End Function
 
-
+'# Browsing to files
 
 Public Function setDefaultDirToOpen(tDir As String)
+' changes where browse starts
 ChDir tDir
 'CreateObject("WScript.Shell").SpecialFolders("Desktop")
 End Function
 
-
 Public Function BrowseToMacro() As Workbook
+' browse to an excel macro
 Set BrowseToMacro = Workbooks.Open(BrowseFilePath(D_EXCEL_MACRO))
 End Function
-
-
 
 Public Function BrowseFilePath(theType As getFileType) As String
 'Gets path of text file for importing data
@@ -235,11 +183,8 @@ BrowseFilePath = sFullName
 
 End Function
 
-
-
-
 Public Function BrowseFilePaths(theType As getFileType) As String()
-
+'Browse to many paths
 On Error GoTo BrowseFilePathsError
 Dim sFullName() As Variant
 sFullName() = Application.GetOpenFilename(browse4type(theType), , , , True)
@@ -255,9 +200,8 @@ BrowseFilePaths = errorStr
 
 End Function
 
-
 Private Function browse4type(theType As getFileType) As String
-
+'Browse to one paths
 If theType = A_CSV Then browse4type = "*.csv,*.csv"
 If theType = B_EXCEL Then browse4type = "*.xlsx,*.xlsx"
 If theType = C_EXCEL_OLD Then browse4type = "*.xls,*.xls"
@@ -273,13 +217,11 @@ If theType = K_SCH Then browse4type = "*.sch,*.sch"
 ' "Visual Basic Files (.bas; *.txt),.bas;*.txt"
 End Function
 
-
-
 ' /--------------------------------------------\
 ' |converts a variant array to a string array  |
 ' \--------------------------------------------/
-Function ConvertVariantToSTRArr(theVariant() As Variant) As String()
-
+Private Function ConvertVariantToSTRArr(theVariant() As Variant) As String()
+' Converts variants to string arr
 Dim strARR() As String
 Dim x As Integer
 For x = LBound(theVariant) To UBound(theVariant)
@@ -289,9 +231,4 @@ Next x
 ConvertVariantToSTRArr = strARR
 
 End Function
-
-
-
-
-
 

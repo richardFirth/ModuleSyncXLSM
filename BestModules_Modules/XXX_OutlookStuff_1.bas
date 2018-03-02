@@ -1,21 +1,24 @@
 Attribute VB_Name = "XXX_OutlookStuff_1"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.2
-'$*DATE*30Jan18
+'$*MINOR_VERSION*1.3
+'$*DATE*2/28/2018*xx
 '$*ID*OutlookStuff
-'$*CharCount*1189*xxxx
-'$*RowCount*70*xxxxx
+'$*CharCount*1761*xxxx
+'$*RowCount*72*xxxxx
 
-
+'/T--XXX_OutlookStuff_1-----------------------------------------------------------\
+' Function Name           | Return   |  Description                               |
+'-------------------------|----------|--------------------------------------------|
+'getAttachmentsFromFiles  | Void     |  gets attachements from downloaded emails  |
+'TestOutlookIsOpen        | Boolean  |  checks if outlook is open                 |
+'\--------------------------------------------------------------------------------/
 
 Option Explicit
 
 ' use microsoft outlook 16.0 object library
 
-
-
 Sub getAttachmentsFromFiles(theFilePaths() As String, toSavePath As String)
-
+' gets attachements from downloaded emails
 Dim objOL As Outlook.Application
 'Dim Msg As Outlook.MailItem
 Dim msg As Object
@@ -45,11 +48,10 @@ Next x
 
 Set objOL = Nothing
 
-
 End Sub
 
-
 Function TestOutlookIsOpen() As Boolean
+' checks if outlook is open
 Dim testOutlook As Object
 
 On Error Resume Next
