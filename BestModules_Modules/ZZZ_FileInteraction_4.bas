@@ -1,10 +1,10 @@
 Attribute VB_Name = "ZZZ_FileInteraction_4"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.4
-'$*DATE*2/28/2018*xx
+'$*MINOR_VERSION*1.7
+'$*DATE*3/8/2018*xxx
 '$*ID*FileInteraction
-'$*CharCount*7070*xxxx
-'$*RowCount*235*xxxx
+'$*CharCount*7284*xxxx
+'$*RowCount*242*xxxx
 
 '/T--ZZZ_FileInteraction_4--------------------------------------------------------\
 ' Function Name          | Return    |  Description                               |
@@ -21,12 +21,12 @@ Attribute VB_Name = "ZZZ_FileInteraction_4"
 'FolderThere             | Boolean   | checks if a folder is present              |
 'FileThere               | Boolean   | checks if a file is present                |
 '----- Browsing to files----------------------------------------------------------|
-'setDefaultDirToOpen     | String)   |  changes where browse starts               |
+'setDefaultDirToOpen     | Void      |  changes where browse starts               |
 'BrowseToMacro           | Workbook  |  browse to an excel macro                  |
 'BrowseFilePath          | String    | Gets path of text file for importing data  |
 'BrowseFilePaths         | String()  | Browse to many paths                       |
-'browse4type             | String    | Browse to one paths                        |
-'ConvertVariantToSTRArr  | String()  |  Converts variants to string arr           |
+'~~browse4type           | String    | Browse to one paths                        |
+'~~ConvertVariantToSTRArr| String()  |  Converts variants to string arr           |
 '\--------------------------------------------------------------------------------/
 
 Option Explicit
@@ -43,6 +43,7 @@ H_Text
 I_Lib
 J_BRD
 K_SCH
+L_XML
 End Enum
 
 '# Directory interactions
@@ -141,32 +142,38 @@ End Function
 Public Function FolderThere(folderPathToTest As String) As Boolean
 'checks if a folder is present
 If folderPathToTest = "" Then FolderThere = False: Exit Function
+On Error GoTo FolderThereErr
 If Len(Dir(folderPathToTest, vbDirectory)) = 0 Then
-FolderThere = False
+    FolderThere = False
 Else
-FolderThere = True
+    FolderThere = True
 End If
-
+Exit Function
+FolderThereErr:
+    FolderThere = False
 End Function
 
 Public Function FileThere(theFileNameToTest As String) As Boolean
 'checks if a file is present
 If theFileNameToTest = "" Then FileThere = False: Exit Function
+On Error GoTo FileThereErr
 If Len(Dir(theFileNameToTest)) = 0 Then
-FileThere = False
+    FileThere = False
 Else
-FileThere = True
+    FileThere = True
 End If
-
+Exit Function
+FileThereErr:
+    FileThere = False
 End Function
 
 '# Browsing to files
 
-Public Function setDefaultDirToOpen(tDir As String)
+Public Sub setDefaultDirToOpen(tDir As String)
 ' changes where browse starts
 ChDir tDir
 'CreateObject("WScript.Shell").SpecialFolders("Desktop")
-End Function
+End Sub
 
 Public Function BrowseToMacro() As Workbook
 ' browse to an excel macro
@@ -213,7 +220,7 @@ If theType = H_Text Then browse4type = "*.txt,*.txt"
 If theType = I_Lib Then browse4type = "*.lbr,*.lbr"
 If theType = J_BRD Then browse4type = "*.brd,*.brd"
 If theType = K_SCH Then browse4type = "*.sch,*.sch"
-
+If theType = L_XML Then browse4type = "*.xml,*.xml"
 ' "Visual Basic Files (.bas; *.txt),.bas;*.txt"
 End Function
 

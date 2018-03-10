@@ -1,9 +1,9 @@
 Attribute VB_Name = "ZZZ_StringArrayFunctions_6"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.8
-'$*DATE*2/28/2018*xx
+'$*MINOR_VERSION*1.9
+'$*DATE*3/9/2018*xxx
 '$*ID*StringArrayFunctions
-'$*CharCount*10524*xxx
+'$*CharCount*10518*xxx
 '$*RowCount*327*xxxx
 
 '/T--ZZZ_StringArrayFunctions_6-------------------------------------------------------------------\
@@ -279,10 +279,10 @@ If Not arrayHasStuff(Arr) Then Exit Function
 
 For x = LBound(Arr) To UBound(Arr)
 ReDim Preserve loc(1 To n) As String
-loc(n) = TrimArray(Arr(x))
+loc(n) = Trim(Arr(x))
 n = n + 1
 Next x
-CleanArray = loc
+TrimArray = loc
 End Function
 
 Public Function removeBlanksFromArray(Arr() As String) As String()

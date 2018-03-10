@@ -8,50 +8,50 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 
-
-
-'/T--X_SingleModuleObject_1----------------------------------------------------------------------------------------------------------------------\
-' Function Name          | Return                |  Description                                                                                  |
-'------------------------|-----------------------|-----------------------------------------------------------------------------------------------|
-'----- Getters & Setters  |----------------------------------------------------------------------------------------------------------------------|
-'isOldVersion            | Boolean               |  getter for isOldVersion                                                                      |
-'isVersionControl        | Boolean               |  getter for isOldVersion                                                                      |
-'isCodeChange            | Boolean               |  getter for codeChange                                                                        |
-'isNewModule             | Boolean               | sNewModule = PnewModule                                                                       |
-'getMyModuleVersionData  | ModuleVersionData     |  getter for myModuleVersionData                                                               |
-'getModuleName           | String                |  getter for module name                                                                       |
-'getModulePath           | String                |  getter for module path                                                                       |
-'getModuleContents       | String()              |  getter for module contents                                                                   |
-'initializeModule        | Void                  | initialize the module data                                                                    |
-'SetIfOldVersion         | ModuleVersionData)    |  tests module data against the newest version to determine if it's the latest version or not  |
-'FlagNewIDS              | Void                  |  used to identify IDs found in this workbook that are not found in the 'BestModules' workboo  |
-'saveModule              | Void                  |  save the module code                                                                         |
-'hasCodeChanged          | Boolean               |  return if the code has changed                                                               |
-'acceptAsLatestVersion   | Void                  |  accept the module as the latest version                                                      |
-'pushBackVersion         | Void                  | push module back a version                                                                    |
-'updateCountsInFile      | Boolean               | update the version control header to current                                                  |
-'makeDateSTR             | String                |  make a string to use as the date                                                             |
-'makeCharCountSTR        | String                |  make a string to use as the char count                                                       |
-'makeRowCountSTR         | String                |  make a string to use as the Row count                                                        |
-'makeMinorVersion        | String                |  make a string to use as the minor version                                                    |
-'getTrueRowCount         | Integer               |  get the true row count                                                                       |
-'getWrittenRowCount      | Integer               |  get the written character count                                                              |
-'getTrueCharCount        | Long                  |  get the true character count                                                                 |
-'getWrittenCharCount     | Long                  |  get the character count recorded                                                             |
-'----- Initial Data Extraction  |----------------------------------------------------------------------------------------------------------------|
-'refreshModVerDataFromTXT       | Void                  |  entry point for extracting the module version data from a single module                      |
-'underVersionControl     | Boolean               |  checks if a module is under version control                                                  |
-'extractVersionName      | String                |  extracts the name                                                                            |
-'extractMajorVersion     | String                |  extracts the major version                                                                   |
-'extractMinorVer         | String                |  extracts the minor version                                                                   |
-'extractDateVer          | String                |  extracts the date version                                                                    |
-'extractModuleID         | String                |  extracts the module ID                                                                       |
-'----- Auto Formatting           |---------------------------------------------------------------------------------------------------------------|
-'z_updateTable           | z_updateTable()       |  updates the function data table                                                              |
-'z_DeleteTable           | Integer               | Deletes the table                                                                             |
-'z_removeDoubleGaps      | z_removeDoubleGaps()  | removes spaces greater than 2                                                                 |
-'\-----------------------------------------------------------------------------------------------------------------------------------------------/
-
+'/T--X_SingleModuleObject_1-------------------------------------------------------------------------------------------------------------------------\
+' Function Name            | Return                 |  Description                                                                                  |
+'--------------------------|------------------------|-----------------------------------------------------------------------------------------------|
+'----- Getters & Setters----------------------------------------------------------------------------------------------------------------------------|
+'getMyModuleVersionData    | ModuleVersionData      |  getter for moduleversiondata                                                                 |
+'getModuleName             | String                 |  getter for module name                                                                       |
+'getModulePath             | String                 |  getter for module path                                                                       |
+'isVersionControl          | Boolean                |  getter for isOldVersion                                                                      |
+'moduleID                  | String                 |  getter for module id                                                                         |
+'isOldVersion              | Boolean                |  getter for old version                                                                       |
+'isCodeChange              | Boolean                |  getter for codeChange                                                                        |
+'getModuleContents         | String()               |  getter for module contents                                                                   |
+'initializeModule          | Void                   | initialize the module data                                                                    |
+'SetIfOldVersion           | ModuleVersionData)     |  tests module data against the newest version to determine if it's the latest version or not  |
+'saveModule                | Void                   |  save the module code                                                                         |
+'hasCodeChanged            | Boolean                |  return if the code has changed                                                               |
+'acceptAsLatestVersion     | Void                   |  accept the module as the latest version                                                      |
+'pushBackVersion           | Void                   | push module back a version                                                                    |
+'~~updateCountsInFile      | Boolean                | update the version control header to current                                                  |
+'~~makeDateSTR             | String                 |  make a string to use as the date                                                             |
+'~~makeCharCountSTR        | String                 |  make a string to use as the char count                                                       |
+'~~makeRowCountSTR         | String                 |  make a string to use as the Row count                                                        |
+'~~makeMinorVersion        | String                 |  make a string to use as the minor version                                                    |
+'~~getTrueRowCount         | Integer                |  get the true row count                                                                       |
+'~~getWrittenRowCount      | Integer                |  get the written character count                                                              |
+'~~getTrueCharCount        | Long                   |  get the true character count                                                                 |
+'~~getWrittenCharCount     | Long                   |  get the character count recorded                                                             |
+'----- Initial Data Extraction----------------------------------------------------------------------------------------------------------------------|
+'refreshModVerDataFromTXT  | Void                   |  entry point for extracting the module version data from a single module                      |
+'~~underVersionControl     | Boolean                |  checks if a module is under version control                                                  |
+'~~extractVersionName      | String                 |  extracts the name                                                                            |
+'~~extractMajorVersion     | String                 |  extracts the major version                                                                   |
+'~~extractMinorVer         | String                 |  extracts the minor version                                                                   |
+'~~extractDateVer          | String                 |  extracts the date version                                                                    |
+'~~extractModuleID         | String                 |  extracts the module ID                                                                       |
+'----- Auto Formatting------------------------------------------------------------------------------------------------------------------------------|
+'z_updateTable             | Void                   |  updates the function data table                                                              |
+'~~z_DeleteTable           | Integer                | Deletes the table                                                                             |
+'z_removeDoubleGaps        | z_removeDoubleGaps()   | removes spaces greater than 2                                                                 |
+'z_addCommentToFunction    | String)                |  adds a comment to a function                                                                 |
+'z_getFunctionLocation     | Integer                |  retrives the location of a function in the module data                                       |
+'z_addLogFunction          | z_addLogFunction()     |  adds a logging function to the end of each function                                          |
+'z_removeLogFunction       | z_removeLogFunction()  |  removes the function logging thing                                                           |
+'\--------------------------------------------------------------------------------------------------------------------------------------------------/
 
 Option Explicit
 
@@ -60,7 +60,6 @@ Private Enum AlterVersion
     B_DECREASE
     C_LEAVEALONE
 End Enum
-
 
 Private myModuleVersionData As ModuleVersionData
 '    A_Name As String
@@ -71,14 +70,12 @@ Private myModuleVersionData As ModuleVersionData
 '    B_ModulePath As String
 '    H_OldVersion As Boolean
 '    D_ID As String
-'    I_newModule As Boolean
 '    J_CodeChange As Boolean
 
 Private moduleContents() As String
 
-
 '/--------------------\
-'# Getters & Setters  |
+'# Getters & Setters
 '\--------------------/
 
 Public Function getMyModuleVersionData() As ModuleVersionData
@@ -111,27 +108,15 @@ Public Function isOldVersion() As Boolean
     isOldVersion = myModuleVersionData.H_OldVersion
 End Function
 
-Public Function isNewModule() As Boolean
-' getter for new module
-    isNewModule = myModuleVersionData.I_newModule
-End Function
-
 Public Function isCodeChange() As Boolean
 ' getter for codeChange
     isCodeChange = myModuleVersionData.J_CodeChange
 End Function
 
-
-
-
-
-
 Public Function getModuleContents() As String()
 ' getter for module contents
     getModuleContents = moduleContents
 End Function
-
-
 
 Public Sub initializeModule(modPath As String)
 'initialize the module data
@@ -139,37 +124,25 @@ Public Sub initializeModule(modPath As String)
     Call refreshModVerDataFromTXT
 End Sub
 
-
-Public Function SetIfOldVersion(newestData() As ModuleVersionData)
+Public Sub SetIfOldVersion(newestData() As ModuleVersionData)
 ' tests module data against the newest version to determine if it's the latest version or not
-If Not myModuleVersionData.C_Vcontrol Then Exit Function
+If Not myModuleVersionData.C_Vcontrol Then Exit Sub
 
 On Error GoTo setIfOldVErr
     Dim x As Integer
     For x = LBound(newestData) To UBound(newestData)
         If newestData(x).D_ID = myModuleVersionData.D_ID Then
-            If CDate(newestData(x).G_date) > CDate(myModuleVersionData.G_date) Then myModuleVersionData.H_OldVersion = True: Exit Function
-            If newestData(x).E_MajorVersion <> myModuleVersionData.E_MajorVersion Then myModuleVersionData.H_OldVersion = True: Exit Function
-            If newestData(x).F_MinorVersion <> myModuleVersionData.F_MinorVersion Then myModuleVersionData.H_OldVersion = True: Exit Function
-            myModuleVersionData.H_OldVersion = False: Exit Function
+            If CDate(newestData(x).G_date) > CDate(myModuleVersionData.G_date) Then myModuleVersionData.H_OldVersion = True: Exit Sub
+            If newestData(x).E_MajorVersion <> myModuleVersionData.E_MajorVersion Then myModuleVersionData.H_OldVersion = True: Exit Sub
+            If newestData(x).F_MinorVersion <> myModuleVersionData.F_MinorVersion Then myModuleVersionData.H_OldVersion = True: Exit Sub
+            myModuleVersionData.H_OldVersion = False: Exit Sub
         End If
     Next x
-Exit Function
+Exit Sub
 setIfOldVErr:
     Debug.Print "setIfOldVErr"
     myModuleVersionData.H_OldVersion = True
-End Function
-
-
-Public Sub FlagNewIDS(currentIDList() As String)
- ' used to identify IDs found in this workbook that are not found in the 'BestModules' workboo
- If myModuleVersionData.C_Vcontrol Then
-    If Not stringInArray(myModuleVersionData.D_ID, currentIDList) Then myModuleVersionData.I_newModule = True
- End If
 End Sub
-
-
-
 
 Public Sub saveModule(Optional otherPath As String = "")
 ' save the module code
@@ -191,9 +164,6 @@ Public Sub saveModule(Optional otherPath As String = "")
     Call createTextFromStringArr(nCode, otherPath)
 End Sub
 
-
-
-
 Public Function hasCodeChanged() As Boolean
 ' return if the code has changed
 
@@ -207,7 +177,6 @@ Public Function hasCodeChanged() As Boolean
 '    Call appendAsRowToCSV(ThisWorkbook.Path & "\codeChangeLog.csv", nSTR)
 'End If
 
-
 If getTrueCharCount <> getWrittenCharCount Then hasCodeChanged = True: Exit Function
 
 If UCase(Right(myModuleVersionData.B_ModulePath, 3)) = "FRM" Then
@@ -220,7 +189,6 @@ Else
 End If
 
 End Function
-
 
 Public Sub acceptAsLatestVersion()
 ' accept the module as the latest version
@@ -357,11 +325,9 @@ End Function
         Next x
     End Function
     
-    
 '/--------------------------\
-'# Initial Data Extraction  |
+'# Initial Data Extraction
 '\--------------------------/
-    
     
 Public Sub refreshModVerDataFromTXT()
 ' entry point for extracting the module version data from a single module
@@ -383,7 +349,6 @@ myModuleVersionData.C_Vcontrol = underVersionControl(moduleContents)
         myModuleVersionData.F_MinorVersion = extractMinorVer(moduleContents)
         myModuleVersionData.G_date = extractDateVer(moduleContents)
         myModuleVersionData.H_OldVersion = False
-        myModuleVersionData.I_newModule = False
         myModuleVersionData.J_CodeChange = hasCodeChanged()
     End If
 End Sub
@@ -429,8 +394,6 @@ Private Function extractMinorVer(theCode() As String) As String
     
 End Function
 
-
-
 Private Function extractDateVer(theCode() As String) As String
 ' extracts the date version
   Dim x As Integer
@@ -471,49 +434,41 @@ End Function
 ' `--' `--' `----'   `--'   `---' `--'    `---' `--'   `--`--`--' `--`--'  `--'    `--'  `--'`--''--'.`-  /
 '                                                                                                    `---'
 '/---------------------------\
-'# Auto Formatting           |
+'# Auto Formatting
 '\---------------------------/
     
-Public Function z_updateTable()
+Public Sub z_updateTable()
 ' updates the function data table
-Dim x As Long
-x = z_DeleteTable
-If x = -1 Then Exit Function
-Dim tTable() As String
-tTable = createTableFromModuleData(moduleContents, getModuleName)
-moduleContents = insertArray(moduleContents, tTable, x)
-
-Debug.Print "Table updated " & myModuleVersionData.A_Name
-
-End Function
+    Dim x As Long
+    x = z_DeleteTable
+    If x = -1 Then Exit Sub
+    Dim tTable() As String
+    tTable = createTableFromModuleData(moduleContents, getModuleName)
+    moduleContents = insertArray(moduleContents, tTable, x)
+    Debug.Print "Table updated " & myModuleVersionData.A_Name
+End Sub
     
 Private Function z_DeleteTable() As Integer
 'Deletes the table
-Dim x As Integer
-Dim insertPoint As Integer
-Dim deleteStuff As Boolean
-For x = LBound(moduleContents) To UBound(moduleContents)
-    If Left(moduleContents(x), 5) = "'/T--" Then
-        deleteStuff = True
-        insertPoint = x
-    End If
-    If deleteStuff And Left(moduleContents(x), 1) = "'" Then
-        moduleContents(x) = ""
-    Else
-        If deleteStuff Then
-        z_DeleteTable = insertPoint
-        Exit Function
+    Dim x As Integer
+    Dim insertPoint As Integer
+    Dim deleteStuff As Boolean
+    For x = LBound(moduleContents) To UBound(moduleContents)
+        If Left(moduleContents(x), 5) = "'/T--" Then
+            deleteStuff = True
+            insertPoint = x
         End If
-    End If
-    
-Next x
-
+        If deleteStuff And Left(moduleContents(x), 1) = "'" Then
+            moduleContents(x) = ""
+        Else
+            If deleteStuff Then
+            z_DeleteTable = insertPoint
+            Exit Function
+            End If
+        End If
+    Next x
 z_DeleteTable = -1
-
 End Function
-
-
-
 
 Public Function z_removeDoubleGaps()
 'removes spaces greater than 2
@@ -543,6 +498,107 @@ Dim res() As String
  
     moduleContents = res
 End Function
+
+Public Sub z_addCommentToFunction(tFunctionName As String, theComment As String)
+' adds a comment to a function
+Dim tLoc As Integer
+tLoc = z_getFunctionLocation(tFunctionName)
+
+If tLoc > 0 Then moduleContents = insertString(moduleContents, theComment, tLoc - 1)
+
+End Sub
+
+Public Function z_getFunctionLocation(tFunctionName As String) As Integer
+' retrives the location of a function in the module data
+Dim x As Integer
+Dim checker() As String: checker = TrimArray(moduleContents)
+For x = LBound(checker) To UBound(checker)
+    If checkForSubOrFunction(checker(x)) Then
+        If getFunctionName(checker(x)) = tFunctionName Then z_getFunctionLocation = x: Exit Function
+    End If
+Next x
+z_getFunctionLocation = -1
+End Function
+
+Public Sub z_addLogFunction()
+' adds a logging function to the end of each function
+
+  Dim something() As String
+  Dim myFunctionName As String
+  
+  Dim x As Integer
+  Dim n As Integer: n = 1
+  For x = LBound(moduleContents) To UBound(moduleContents)
+    
+    If checkForSubOrFunction(moduleContents(x)) Then
+        myFunctionName = getFunctionName(moduleContents(x))
+    End If
+    If InStr(1, moduleContents(x), "End Sub") > 0 Or InStr(1, moduleContents(x), "End Function") Then
+        ReDim Preserve something(1 To n) As String
+         something(n) = "Call addToDebugLog(""" & myFunctionName & """,""" & myModuleVersionData.A_Name & """)"
+         n = n + 1
+    End If
+    ReDim Preserve something(1 To n) As String
+    something(n) = moduleContents(x)
+    n = n + 1
+  Next x
+
+  moduleContents = something
+
+End Sub
+
+Public Function z_removeLogFunction()
+' removes the function logging thing
+  Dim newContent() As String
+  Dim x As Integer
+  Dim n As Integer: n = 1
+  For x = LBound(moduleContents) To UBound(moduleContents)
+    If Left(moduleContents(x), 18) = "Call addToDebugLog" Then
+    Else
+        ReDim Preserve newContent(1 To n) As String
+        newContent(n) = moduleContents(x)
+        n = n + 1
+    End If
+  Next x
+  moduleContents = newContent
+
+End Function
+
+
+
+Public Function z_removeGapsInFunctions()
+' removes alll empty rows in subs and functions
+
+  Dim x As Integer: Dim newContent() As String
+  Dim n As Integer: n = 1
+
+ Dim withinFunction As Boolean
+ 
+For x = LBound(moduleContents) To UBound(moduleContents)
+    If checkForSubOrFunction(moduleContents(x)) Then withinFunction = True
+    If checkForEndSubOrFunction(moduleContents(x)) Then withinFunction = False
+
+    If withinFunction Then
+        If Not Trim(moduleContents(x)) = "" Then
+            ReDim Preserve newContent(1 To n) As String
+            newContent(n) = moduleContents(x)
+            n = n + 1
+        Else
+            Debug.Print (x)
+        End If
+    Else
+        ReDim Preserve newContent(1 To n) As String
+        newContent(n) = moduleContents(x)
+        n = n + 1
+    End If
+Next x
+
+moduleContents = newContent
+    
+End Function
+
+
+
 
 
 

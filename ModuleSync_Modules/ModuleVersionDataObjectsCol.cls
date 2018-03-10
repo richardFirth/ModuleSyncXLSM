@@ -9,45 +9,39 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-
 ' Purpose:
 ' The ModuleVersionDataObjectsCol contains a collection of ModuleVersionDataObject that represent a number of workbooks
 ' that can by synced
 
-
-
-'/T--ModuleVersionDataObjectsCol-----------------------------------------------------------------------------------------------\
-' Function Name               | Return                   |  Description                                                        |
-'-----------------------------|--------------------------|---------------------------------------------------------------------|
-'----- Setters and getters       |---------------------------------------------------------------------------------------------|
-'setModuleVersionDataObjects  | Void                     |  sets the module version data ojects                                |
-'getTotalNames                | String()                 |  gives the names of the workbooks                                   |
-'getTotalPaths                | String()                 |  gets the workbook paths from each HeaderDataObject                 |
-'getModuleVDataObjByName      | ModuleVersionDataObject  |  gets a module version data object by it's name                     |
-'----- New Module Identification  |--------------------------------------------------------------------------------------------|
-'identifyAllOldModules        | Void                     |  identify all old modules                                           |
-'populateNewestVersions       | Void                     |  populates Newest Versions of modules                               |
-'getUniqueID                  | String()                 |  unknown                                                            |
-'getNewestVersion             | ModuleVersionData        |  for a given ID, find the newest version of it among versions       |
-'newerVersion                 | Boolean                  |  check if a version is newer than another version                   |
-'----- Module Modification        |--------------------------------------------------------------------------------------------|
-'updateToLatestVersions       | Void                     |  update modules in each workbook to latest versions                 |
-'----- Aceept Changes Modification        |------------------------------------------------------------------------------------|
-'acceptRejectChangesInWKBK    | Void                     |  accepts or rejects the changes for all modules in a workbook       |
-'acceptRejectChangesInModule  | Void                     |  accepts or rejects the changes for a single modules in a workbook  |
-'----- UI/UX methods             |---------------------------------------------------------------------------------------------|
-'makeModuleDisplayByWKBK      | String()                 |                                                                     |
-'-----Print data to sheet        |---------------------------------------------------------------------------------------------|
-'refrestAndReprintAll         | Void                     |                                                                     |
-'displayHeaderObjectData      | Void                     | all clearWorkSpace(theSheet, 1, 6)                                  |
-'\-----------------------------------------------------------------------------------------------------------------------------/
-
-
+'/T--ModuleVersionDataObjectsCol-----------------------------------------------------------------------------------------------------\
+' Function Name               | Return                   |  Description                                                              |
+'-----------------------------|--------------------------|---------------------------------------------------------------------------|
+'----- Setters and getters-----------------------------------------------------------------------------------------------------------|
+'setModuleVersionDataObjects  | Void                     |  sets the module version data ojects                                      |
+'getTotalNames                | String()                 |  gives the names of the workbooks                                         |
+'getTotalPaths                | String()                 |  gets the workbook paths from each HeaderDataObject                       |
+'getModuleVDataObjByName      | ModuleVersionDataObject  |  gets a module version data object by it's name                           |
+'----- New Module Identification-----------------------------------------------------------------------------------------------------|
+'identifyAllOldModules        | Void                     |  identify all old modules                                                 |
+'~~populateNewestVersions     | Void                     |  populates Newest Versions of modules                                     |
+'~~getUniqueID                | String()                 |  gets the total number of unique ID's from an array of moduleVersionData  |
+'~~getNewestVersion           | ModuleVersionData        |  for a given ID, find the newest version of it among versions             |
+'~~newerVersion               | Boolean                  |  check if a version is newer than another version                         |
+'----- Module Modification-----------------------------------------------------------------------------------------------------------|
+'updateToLatestVersions       | Void                     |  update modules in each workbook to latest versions                       |
+'----- Accept Changes Modification---------------------------------------------------------------------------------------------------|
+'acceptRejectChangesInWKBK    | Void                     |  accepts or rejects the changes for all modules in a workbook             |
+'acceptRejectChangesInModule  | Void                     |  accepts or rejects the changes for a single modules in a workbook        |
+'UpdateTablesInWKBK           | Void                     |  updates all tables in wkbk                                               |
+'----- UI/UX methods-----------------------------------------------------------------------------------------------------------------|
+'makeModuleDisplayByWKBK      | String()                 |                                                                           |
+'-----Print data to sheet------------------------------------------------------------------------------------------------------------|
+'refrestAndReprintAll         | Void                     |                                                                           |
+'displayHeaderObjectData      | Void                     | all clearWorkSpace(theSheet, 1, 6)                                        |
+'\-----------------------------------------------------------------------------------------------------------------------------------/
 
 Private theModuleVersionDataObjects As Collection
 Private newestData() As ModuleVersionData ' represents the newest version of each module
-
-
 
 '/===========================\
 '# Setters and getters
@@ -58,13 +52,10 @@ Public Sub setModuleVersionDataObjects(theHDataCol As Collection)
 Set theModuleVersionDataObjects = theHDataCol
 End Sub
 
-
-
 Public Function getTotalNames() As String()
 ' gives the names of the workbooks
 getTotalNames = namesFromPaths(getTotalPaths)
 End Function
-
 
 Public Function getTotalPaths() As String()
 ' gets the workbook paths from each HeaderDataObject
@@ -78,7 +69,6 @@ Public Function getTotalPaths() As String()
     getTotalPaths = totalPaths
 End Function
 
-
 Public Function getModuleVDataObjByName(tName) As ModuleVersionDataObject
 ' gets a module version data object by it's name
     Dim aHeaderObject As ModuleVersionDataObject
@@ -89,7 +79,6 @@ Public Function getModuleVDataObjByName(tName) As ModuleVersionDataObject
     
 End Function
 
-
 '/============================\
 '# New Module Identification
 '\============================/
@@ -97,19 +86,16 @@ End Function
 Public Sub identifyAllOldModules()
 ' identify all old modules
     Dim myHD As ModuleVersionDataObject
-    Dim mainV() As String ' main versions
     Dim processToNewestData() As ModuleVersionData
     
         For Each myHD In theModuleVersionDataObjects
             processToNewestData = ConcatenateModuleVersionData(processToNewestData, myHD.getLatestModuleData)
-            If nameFromPath(myHD.getWKBKPath) = BestModules Then mainV = myHD.getIDS
         Next myHD
         
     Call populateNewestVersions(processToNewestData) 'this generates the newest data
     
         For Each myHD In theModuleVersionDataObjects
             Call myHD.identifyOldModuleVersions(newestData) ' set the new
-            Call myHD.FlagNewIDS(mainV)
         Next myHD
 End Sub
 
@@ -198,11 +184,8 @@ BADNewerVersion:
             newerVersion = False
     End Function
 
-
-
-
 '/===========================\
-'# Module Modification        |
+'# Module Modification
 '\===========================/
 
 Public Sub updateToLatestVersions()
@@ -226,11 +209,9 @@ Public Sub updateToLatestVersions()
   
 End Sub
 
-
 '/===================================\
-'# Aceept Changes Modification        |
+'# Accept Changes Modification
 '\===================================/
-
 
 Public Sub acceptRejectChangesInWKBK(tName As String, accept As Boolean)
 ' accepts or rejects the changes for all modules in a workbook
@@ -251,9 +232,6 @@ Call reportError("acceptRejectChangesInWKBK", tERR)
     
 End Sub
 
-
-
-
 Public Sub acceptRejectChangesInModule(tName As String, tModName As String, accept As Boolean)
 ' accepts or rejects the changes for a single modules in a workbook
     Dim theOB As ModuleVersionDataObject
@@ -272,7 +250,6 @@ Dim tERR(1 To 2) As String
 Call reportError("acceptRejectChangesInModule", tERR)
     
 End Sub
-
 
 Public Sub UpdateTablesInWKBK(tName As String)
 ' updates all tables in wkbk
@@ -293,12 +270,8 @@ Call reportError("UpdateTablesInWKBK", tERR)
     
 End Sub
 
-
-
-
-
 '/===========================\
-'# UI/UX methods             |
+'# UI/UX methods
 '\===========================/
 
     
@@ -316,9 +289,8 @@ End Function
     
 
 '/===========================\
-'#Print data to sheet        |
+'#Print data to sheet
 '\===========================/
-
 
 Public Sub refrestAndReprintAll()
 

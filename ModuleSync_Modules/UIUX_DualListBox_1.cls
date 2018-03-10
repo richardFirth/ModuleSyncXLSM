@@ -24,10 +24,10 @@ Attribute VB_Exposed = False
 'displayData             | Void                |  displays the data                                                                    |
 'ClearListBoxMenu        | ClearListBoxMenu()  |  clears the list box menu                                                             |
 'AddToListBoxMenu        | String)             |  adds to the list box menu                                                            |
-'getTitles               | String()            |  gets the titles array                                                                |
-'getSelectedSubMenu      | String()            |  gets the selected item from the submenu                                              |
-'ConcatenateListBoxMenu  | ListBoxMenu()       |  concatentates two listbox menu types                                                 |
-'ListBoxMenuHasStuff     | Boolean             | https://stackoverflow.com/questions/206324/how-to-check-for-empty-array-in-vba-macro  |
+'~~getTitles             | String()            |  gets the titles array                                                                |
+'~~getSelectedSubMenu    | String()            |  gets the selected item from the submenu                                              |
+'~~ConcatenateListBoxMenu| ListBoxMenu()       |  concatentates two listbox menu types                                                 |
+'~~ListBoxMenuHasStuff   | Boolean             | https://stackoverflow.com/questions/206324/how-to-check-for-empty-array-in-vba-macro  |
 '\-------------------------------------------------------------------------------------------------------------------------------------/
 
 Option Explicit

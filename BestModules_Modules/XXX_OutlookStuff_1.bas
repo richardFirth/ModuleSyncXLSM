@@ -1,10 +1,10 @@
 Attribute VB_Name = "XXX_OutlookStuff_1"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.3
-'$*DATE*2/28/2018*xx
+'$*MINOR_VERSION*1.4
+'$*DATE*3/7/2018*xxx
 '$*ID*OutlookStuff
-'$*CharCount*1761*xxxx
-'$*RowCount*72*xxxxx
+'$*CharCount*1896*xxxx
+'$*RowCount*73*xxxxx
 
 '/T--XXX_OutlookStuff_1-----------------------------------------------------------\
 ' Function Name           | Return   |  Description                               |
@@ -28,22 +28,23 @@ Dim att As Outlook.Attachment
 Set objOL = CreateObject("Outlook.Application")
 
 Dim x As Integer
+Dim AttNum As Integer: AttNum = 1
 
 For x = LBound(theFilePaths) To UBound(theFilePaths)
-If Right(theFilePaths(x), 4) <> ".msg" Then GoTo notMSG
-On Error GoTo problemOpening
-Set msg = objOL.Session.OpenSharedItem(theFilePaths(x))
-On Error GoTo 0
-msg.Display
-For Each att In msg.Attachments
-att.SaveAsFile toSavePath & "\" & att.fileName
-Next att
-
-msg.Close (olDiscard)
-Set msg = Nothing
-
+    If Right(theFilePaths(x), 4) <> ".msg" Then GoTo notMSG
+    On Error GoTo problemOpening
+    Set msg = objOL.Session.OpenSharedItem(theFilePaths(x))
+    On Error GoTo 0
+    msg.Display
+        For Each att In msg.Attachments
+            att.SaveAsFile toSavePath & "\" & AttNum & "_" & att.fileName
+            AttNum = AttNum + 1
+        Next att
+    msg.Close (olDiscard)
+    Set msg = Nothing
 problemOpening:
 notMSG:
+
 Next x
 
 Set objOL = Nothing

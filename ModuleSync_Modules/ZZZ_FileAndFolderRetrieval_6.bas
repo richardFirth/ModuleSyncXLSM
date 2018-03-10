@@ -1,10 +1,10 @@
 Attribute VB_Name = "ZZZ_FileAndFolderRetrieval_6"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.3
-'$*DATE*2/28/2018*xx
+'$*MINOR_VERSION*1.5
+'$*DATE*3/8/2018*xxx
 '$*ID*FileAndFolderRetrieval
-'$*CharCount*11316*xxx
-'$*RowCount*357*xxxx
+'$*CharCount*12284*xxx
+'$*RowCount*385*xxxx
 
 '/T--ZZZ_FileAndFolderRetrieval_6----------------------------------------------------------------------------------------------------\
 ' Function Name                 | Return         |  Description                                                                      |
@@ -23,8 +23,10 @@ Attribute VB_Name = "ZZZ_FileAndFolderRetrieval_6"
 'printPathAndNameToColumn       | Void           | prints detail to sheet                                                            |
 'namesFromPaths                 | String()       | returns filenames given paths                                                     |
 'nameFromPath                   | String         | returns filename given path                                                       |
+'pathFromName                   | String         | returns path given full path                                                      |
+'getPathFromPandN               | String()       |  retrieve the paths from the path and name type                                   |
 'ShowHideFilesInFolder          | Void           |  shows or hides files in folder                                                   |
-'showHideFileFolder             | Void           |  helper                                                                           |
+'~~showHideFileFolder           | Void           |  helper                                                                           |
 '\-----------------------------------------------------------------------------------------------------------------------------------/
 
 Option Explicit
@@ -299,8 +301,34 @@ Public Function nameFromPath(thePath As String) As String
 'returns filename given path
 Dim SplitPath() As String
 SplitPath = Split(thePath, "\")
-
 nameFromPath = SplitPath(UBound(SplitPath))
+End Function
+
+Public Function pathFromName(thePath As String) As String
+'returns path given full path
+Dim SplitPath() As String
+SplitPath = Split(thePath, "\")
+    Dim tpath As String
+    Dim x As Integer
+    For x = LBound(SplitPath) To UBound(SplitPath) - 1
+        tpath = tpath & SplitPath(x) & "\"
+    Next x
+pathFromName = tpath
+End Function
+
+Public Function getPathFromPandN(thePandN() As PathAndName) As String()
+' retrieve the paths from the path and name type
+Dim something() As String
+Dim x As Integer
+Dim n As Integer: n = 1
+ 
+ For x = LBound(thePandN) To UBound(thePandN)
+     ReDim Preserve something(1 To n) As String
+     something(n) = thePandN(x).A_Path
+     n = n + 1
+ Next x
+ 
+ getPathFromPandN = something
 
 End Function
 

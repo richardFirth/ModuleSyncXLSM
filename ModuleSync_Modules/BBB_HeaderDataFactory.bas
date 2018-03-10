@@ -1,7 +1,4 @@
 Attribute VB_Name = "BBB_HeaderDataFactory"
-Option Explicit
-
-
 
 '/T--BBB_HeaderDataFactory-------------------------------------------------------------------------------------------------------\
 ' Function Name                    | Return                       |  Description                                                 |
@@ -12,6 +9,7 @@ Option Explicit
 'ModuleVersionDataHasStuff         | Boolean                      |  checks if array is initialized                              |
 '\-------------------------------------------------------------------------------------------------------------------------------/
 
+Option Explicit
 
 Function createModuleObjectsCollection(tPaths() As String) As ModuleVersionDataObjectsCol
 'factory function for theModuleVersionDataObjects collection
@@ -21,10 +19,7 @@ Dim locCol As New Collection
 
 Dim aWKBK As Workbook
     Call createDirectoryRF(folderToPlaceData & "\ModuleSyncOutput") ' to allow output to all me in the module sync
-    Dim theFolderPath As String:
-    
-    theFolderPath = folderToPlaceData & "\ModuleSyncOutput\Modules_"
-
+    Dim theFolderPath As String: theFolderPath = folderToPlaceData & "\ModuleSyncOutput\Modules_"
     Dim x As Integer
     For x = LBound(tPaths) To UBound(tPaths)
         Dim otherWKBKHeaders As ModuleVersionDataObject
@@ -34,11 +29,6 @@ Dim aWKBK As Workbook
             Set otherWKBKHeaders = createModuleHeaderObjectFromWKBK(aWKBK, theFolderPath & theFileName) ' factory function for ModuleVersionDataObject
             Call locCol.Add(otherWKBKHeaders)
             Call aWKBK.Close(False)
-        Else
-            Dim tERR(1 To 2) As String
-            tERR(1) = tPaths(x)
-            tERR(2) = Left(nameFromPath(tPaths(x)), Len(nameFromPath(tPaths(x))) - 5)
-            Call reportError("createHeaderObjectsCollection", tERR)
         End If
     Next x
 
@@ -46,15 +36,11 @@ Call locHDat.setModuleVersionDataObjects(locCol)
 Set createModuleObjectsCollection = locHDat ' return newly created object
 End Function
 
-
 Function createModuleHeaderObjectFromWKBK(theWKBK As Workbook, theFolderName As String) As ModuleVersionDataObject
 ' factory function for ModuleVersionDataObject
-
-Dim myHData As New ModuleVersionDataObject
-
+    Dim myHData As New ModuleVersionDataObject
     Dim thisCollection As Collection
     Set thisCollection = getAllModules(theWKBK)
-    
     Dim modulePaths() As String
     
     If Not FolderThere(theFolderName) Then ' make sure folder creation is possible
@@ -62,10 +48,7 @@ Dim myHData As New ModuleVersionDataObject
     End If
     
     modulePaths() = ExportVBAModulesToPaths(thisCollection, theFolderName)
-    
-    
     Dim singleModcollection As New Collection
-    
     Dim x As Integer
     Dim singleModObj As X_SingleModuleObject_1
     
@@ -90,15 +73,10 @@ createModuleHeaderObjectFromWKBKErr:
     
 End Function
 
-
-
-
 Public Function ConcatenateModuleVersionData(theArray1() As ModuleVersionData, theArray2() As ModuleVersionData) As ModuleVersionData()
 ' concatenates two moduleversiondata type arrays
 Dim newArr() As ModuleVersionData
-
 Dim n As Long: n = 1
-
 Dim x As Long
 If ModuleVersionDataHasStuff(theArray1) Then
     For x = LBound(theArray1) To UBound(theArray1)
@@ -108,17 +86,13 @@ If ModuleVersionDataHasStuff(theArray1) Then
     Next x
 End If
 If ModuleVersionDataHasStuff(theArray2) Then
-
     For x = LBound(theArray2) To UBound(theArray2)
         ReDim Preserve newArr(1 To n) As ModuleVersionData
         newArr(n) = theArray2(x)
         n = n + 1
     Next x
-
 End If
-
 ConcatenateModuleVersionData = newArr
-
 End Function
 
 Public Function ModuleVersionDataHasStuff(theArr() As ModuleVersionData) As Boolean
@@ -126,5 +100,4 @@ Public Function ModuleVersionDataHasStuff(theArr() As ModuleVersionData) As Bool
 'https://stackoverflow.com/questions/206324/how-to-check-for-empty-array-in-vba-macro
     If (Not Not theArr) <> 0 Then ModuleVersionDataHasStuff = True
 End Function
-
 

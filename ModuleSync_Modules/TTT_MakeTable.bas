@@ -3,28 +3,29 @@ Attribute VB_Name = "TTT_MakeTable"
 '/T--TTT_MakeTable-----------------------------------------------------------------------------------------------------------------\
 ' Function Name                 | Return               |  Description                                                              |
 '-------------------------------|----------------------|---------------------------------------------------------------------------|
-'updateTables                   | Void                 |  updates the tables                                                       |
+'testUpdateTables               | Void                 |  test updating the tables                                                 |
+'updateTablesForWorkbook        | Void                 |  Updates the tables for all functions in all modules in a workbook        |
+'updateTablesForFolder          | Void                 |  updates all tables                                                       |
+'updateTablesForPath            | Void                 |  updates the tables                                                       |
+'----- Add and Remove Debug Logs---------------------------------------------------------------------------------------------------|
+'updateLogsForWorkbook          | Void                 |  update the dubug log for a single workbook                               |
 'createTableFromModuleData      | String()             |  main function. given module data, returns the table at the top           |
 'ZgetSubsAndFunctions           | String()             |  gets all subs and functions as a string array                            |
 '----- Function Declarations-------------------------------------------------------------------------------------------------------|
-'ZgetFunctionDeclations         | FunctionDeclation()  |  gets all subs and functions as functionDeclaration                       |
-'PrintFunctionDeclations        | FunctionDeclation)   |  prints the function declarations to a sheet                              |
-'-----String Functions-------------------------------------------------------------------------------------------------------------|
-'getHeadingName                 | String               | im locs() As String                                                       |
-'longestString                  | Integer              |  finds the longest string in an array                                     |
-'getReturnType                  | String               |  gets the return type for a function                                      |
-'getFunctionName                | String               |  gets the name of a function or sub                                       |
-'makeCommentTableEntries        | String()             |  makes the main entries in the table using the functionDeclaration array  |
-'getStringArrayFromFunctionDec  | String()             |  gets the string array from the function declaration                      |
-'stringToLength                 | String               |  adds spaces to a string until it is the desired length                   |
-'makeSingleTableRow             | String               |  makes a single table row                                                 |
-'makeHeading                    | String               |  makes a heading                                                          |
-'makeBreakRow                   | String               |  makes a breakRow                                                         |
-'makeTableHeaderFooter          | String               |  makes a table header or footer                                           |
-'bunchOfDash                    | String               |  generates tn number of dashes                                            |
-'addTabs                        | String               |  adds tabs to a row                                                       |
-'checkForSubOrFunction          | Boolean              | checks if a line item is a sub or function                                |
-'checkForEndSubOrFunction       | Boolean              | checks for the end of a sub or function                                   |
+'~~ZgetFunctionDeclations       | FunctionDeclation()  |  gets all subs and functions as functionDeclaration                       |
+'~~PrintFunctionDeclations      | FunctionDeclation)   |  prints the function declarations to a sheet                              |
+'~~getHeadingName               | String               |  gets the name of a Heading                                               |
+'~~longestString                | Integer              |  finds the longest string in an array                                     |
+'getPubOrPrivName               | pubOrPriv            |  gets if pubOrPriv                                                        |
+'~~makeCommentTableEntries      | String()             |  makes the main entries in the table using the functionDeclaration array  |
+'~~getStringArrayFromFunctionDec| String()             |  gets the string array from the function declaration                      |
+'~~stringToLength               | String               |  adds spaces to a string until it is the desired length                   |
+'~~makeSingleTableRow           | String               |  makes a single table row                                                 |
+'~~makeHeading                  | String               |  makes a heading                                                          |
+'~~makeBreakRow                 | String               |  makes a breakRow                                                         |
+'~~makeTableHeaderFooter        | String               |  makes a table header or footer                                           |
+'~~bunchOfDash                  | String               |  generates tn number of dashes                                            |
+'~~addTabs                      | String               |  adds tabs to a row                                                       |
 '\---------------------------------------------------------------------------------------------------------------------------------/
 
 Option Explicit
@@ -48,37 +49,36 @@ Public Type FunctionDeclation
     F_isHeader As Boolean
 End Type
 
-
-Sub testUpdateTables()
-    Call updateTablesForFolder("C:\Users\rfirth1\Desktop\TESTING")
-End Sub
-
-Sub testupdateTablesForWorkbook()
-    Call updateTablesForWorkbook("C:\Users\rfirth1\Desktop\2018_DCV_Macro\SALES_RedipointMacro.xlsm")
-End Sub
-
-
-Sub updateTablesForWorkbook(tkbk As String)
-
-Dim theWKBK As Workbook
-Set theWKBK = Workbooks.Open(tkbk)
-
-Dim aFPath As String: aFPath = theWKBK.Path & "\Mods"
-
-Dim aModVDOB As ModuleVersionDataObject
-Set aModVDOB = createModuleHeaderObjectFromWKBK(theWKBK, aFPath)
-
-theWKBK.Close
-
-Call aModVDOB.updateAllTables
-
+Public Sub testUpdateTables()
+    ' test updating the tables
+    Call updateTablesForPath("C:\Users\rfirth1\Desktop\CD_TariffCode.bas")
 End Sub
 
 
 
 
-Sub updateTablesForFolder(tFolder As String)
 
+
+
+
+Public Sub updateTablesForWorkbook(tkbk As String)
+' Updates the tables for all functions in all modules in a workbook
+Call complexRoutineStart("")
+
+    Dim theWKBK As Workbook
+    Set theWKBK = Workbooks.Open(tkbk)
+    Dim aFPath As String: aFPath = theWKBK.Path & "\Mods"
+    Dim aModVDOB As ModuleVersionDataObject
+    Set aModVDOB = createModuleHeaderObjectFromWKBK(theWKBK, aFPath)
+    theWKBK.Close
+    Call aModVDOB.updateAllTables
+
+Call complexRoutineEnd("")
+
+End Sub
+
+Public Sub updateTablesForFolder(tFolder As String)
+' updates all tables
 Dim tFiles() As PathAndName
 tFiles = DetailFilesInFolder2Array(tFolder)
   Dim x As Integer
@@ -88,15 +88,30 @@ tFiles = DetailFilesInFolder2Array(tFolder)
 
 End Sub
 
-Sub updateTablesForPath(tPath As String)
+Public Sub updateTablesForPath(tpath As String)
 ' updates the tables
     Dim tWKBK As New X_SingleModuleObject_1
-    tWKBK.initializeModule (tPath)
-    tWKBK.z_updateTable
-    tWKBK.z_updateTable
-    tWKBK.saveModule
+        tWKBK.initializeModule (tpath)
+        tWKBK.z_updateTable
+        tWKBK.z_removeDoubleGaps
+        tWKBK.saveModule
 End Sub
 
+'# Add and Remove Debug Logs
+Public Sub updateLogsForWorkbook(tkbk As String, addLog As Boolean)
+' update the dubug log for a single workbook
+
+Call complexRoutineStart("")
+    Dim theWKBK As Workbook
+    Set theWKBK = Workbooks.Open(tkbk)
+    Dim aFPath As String: aFPath = theWKBK.Path & "\Mods"
+    Dim aModVDOB As ModuleVersionDataObject
+    Set aModVDOB = createModuleHeaderObjectFromWKBK(theWKBK, aFPath)
+    theWKBK.Close
+    Call aModVDOB.updateLogFunctions(addLog)
+Call complexRoutineEnd("")
+
+End Sub
 
 Public Function createTableFromModuleData(mData() As String, mName As String) As String()
 ' main function. given module data, returns the table at the top
@@ -105,11 +120,7 @@ Public Function createTableFromModuleData(mData() As String, mName As String) As
     createTableFromModuleData = makeCommentTableEntries(tFunc, mName)
 End Function
 
-
-
-
-
-Private Function ZgetSubsAndFunctions(moduleContents() As String) As String()
+Public Function ZgetSubsAndFunctions(moduleContents() As String) As String()
 ' gets all subs and functions as a string array
         Dim tContents() As String
         tContents = TrimAndCleanArray(moduleContents)
@@ -132,34 +143,35 @@ End Function
 
 Private Function ZgetFunctionDeclations(moduleContents() As String) As FunctionDeclation()
 ' gets all subs and functions as functionDeclaration
-        Dim tContents() As String
-        tContents = TrimAndCleanArray(moduleContents)
+Dim tContents() As String
+tContents = TrimAndCleanArray(moduleContents)
+
+Dim n As Integer: n = 1
+Dim gSubsandFunc() As FunctionDeclation
         
-        Dim n As Integer: n = 1
-        Dim gSubsandFunc() As FunctionDeclation
-        
-        Dim x As Integer
-        For x = LBound(tContents) To UBound(tContents)
-            If checkForSubOrFunction(tContents(x)) Then
-                ReDim Preserve gSubsandFunc(1 To n) As FunctionDeclation
-                gSubsandFunc(n).A_SourceSTR = tContents(x)
-                gSubsandFunc(n).B_Name = getFunctionName(tContents(x))
-                gSubsandFunc(n).C_Return = getReturnType(tContents(x))
-                If tContents(x + 1) <> "" Then
-                gSubsandFunc(n).D_Description = Right(tContents(x + 1), Len(tContents(x + 1)) - 1)
-                End If
-                n = n + 1
-            End If
-            
-            If Left(tContents(x), 2) = "'#" Then
-                ReDim Preserve gSubsandFunc(1 To n) As FunctionDeclation
-                gSubsandFunc(n).B_Name = getHeadingName(tContents(x))
-                gSubsandFunc(n).F_isHeader = True
-                n = n + 1
-            End If
-            
-        Next x
-        ZgetFunctionDeclations = gSubsandFunc
+Dim x As Integer
+For x = LBound(tContents) To UBound(tContents)
+    If checkForSubOrFunction(tContents(x)) Then
+        ReDim Preserve gSubsandFunc(1 To n) As FunctionDeclation
+        gSubsandFunc(n).A_SourceSTR = tContents(x)
+        gSubsandFunc(n).B_Name = getFunctionName(tContents(x))
+        gSubsandFunc(n).C_Return = getReturnType(tContents(x))
+        gSubsandFunc(n).E_Scope = getPubOrPrivName(tContents(x))
+        If tContents(x + 1) <> "" Then
+        gSubsandFunc(n).D_Description = Right(tContents(x + 1), Len(tContents(x + 1)) - 1)
+        End If
+        n = n + 1
+    End If
+    
+    If Left(tContents(x), 2) = "'#" Then
+        ReDim Preserve gSubsandFunc(1 To n) As FunctionDeclation
+        gSubsandFunc(n).B_Name = getHeadingName(tContents(x))
+        gSubsandFunc(n).F_isHeader = True
+        n = n + 1
+    End If
+    
+Next x
+ZgetFunctionDeclations = gSubsandFunc
 End Function
 
 Private Sub PrintFunctionDeclations(pDec() As FunctionDeclation)
@@ -181,13 +193,10 @@ For x = LBound(pDec) To UBound(pDec)
 Next x
 End With
 
-
 End Sub
 
-
-'#String Functions
-
 Private Function getHeadingName(theading As String) As String
+' gets the name of a Heading
     Dim locs() As String
     locs = Split(theading, "#")
     getHeadingName = locs(1)
@@ -206,38 +215,24 @@ Private Function longestString(tArr() As String) As Integer
 
 End Function
 
-Private Function getReturnType(tFDec As String) As String
-' gets the return type for a function
-    If InStr(1, tFDec, "Function", vbBinaryCompare) > 0 Then
-        Dim strG() As String
-        strG = Split(tFDec, " ")
-        getReturnType = strG(UBound(strG))
-    Else
-        getReturnType = "Void"
-    End If
-End Function
-
-
-Private Function getFunctionName(tFDec As String) As String
-' gets the name of a function or sub
-        Dim SPL1() As String
-        SPL1 = Split(tFDec, "(")
+Public Function getPubOrPrivName(tFDec As String) As pubOrPriv
+' gets if pubOrPriv
+    Dim SPL1() As String
+    SPL1 = Split(tFDec, " ")
+    If SPL1(0) = "Private" Then getPubOrPrivName = B_PRIVATE: Exit Function
         
-        Dim strG() As String
-        strG = Split(SPL1(0), " ")
-        getFunctionName = strG(UBound(strG))
+    getPubOrPrivName = A_PUBLIC
    
 End Function
-
 
 Private Function makeCommentTableEntries(tDec() As FunctionDeclation, tblName As String) As String()
 ' makes the main entries in the table using the functionDeclaration array
 
-Dim fNames() As String: fNames = getStringArrayFromFunctionDec(tDec, A_WantName)
+Dim FNames() As String: FNames = getStringArrayFromFunctionDec(tDec, A_WantName)
 Dim fReturns() As String: fReturns = getStringArrayFromFunctionDec(tDec, B_WantReturn)
 Dim fDesc() As String: fDesc = getStringArrayFromFunctionDec(tDec, C_WantDesc)
 
-Dim nameLength As Integer: nameLength = longestString(fNames) + 2
+Dim nameLength As Integer: nameLength = longestString(FNames) + 2
 Dim returnLength As Integer: returnLength = longestString(fReturns) + 2
 Dim decLength As Integer: decLength = longestString(fDesc) + 2
 
@@ -275,7 +270,6 @@ makeCommentTableEntries = tblData
 
 End Function
 
-
 Private Function getStringArrayFromFunctionDec(tDec() As FunctionDeclation, key As WhichType) As String()
 ' gets the string array from the function declaration
  Dim x As Integer
@@ -297,9 +291,6 @@ getStringArrayFromFunctionDec = wSTR
 
 End Function
 
-
-
-
 Private Function stringToLength(tSTR As String, desireLen As Integer) As String
 ' adds spaces to a string until it is the desired length
     Dim locSTR As String: locSTR = tSTR
@@ -314,13 +305,14 @@ Private Function stringToLength(tSTR As String, desireLen As Integer) As String
     stringToLength = locSTR
 End Function
 
-
-
 Private Function makeSingleTableRow(tDec As FunctionDeclation, nameL As Integer, retL As Integer, decL As Integer) As String
 ' makes a single table row
+If tDec.E_Scope = A_PUBLIC Then
     makeSingleTableRow = "'" & stringToLength(tDec.B_Name, nameL) & "| " & stringToLength(tDec.C_Return, retL) & "| " & stringToLength(tDec.D_Description, decL) & "|"
+Else
+    makeSingleTableRow = "'" & stringToLength("~~" & tDec.B_Name, nameL) & "| " & stringToLength(tDec.C_Return, retL) & "| " & stringToLength(tDec.D_Description, decL) & "|"
+End If
 End Function
-
 
 Private Function makeHeading(tDec As FunctionDeclation, nameL As Integer, retL As Integer, decL As Integer) As String
 ' makes a heading
@@ -366,21 +358,3 @@ Private Function addTabs(n As Integer) As String
     addTabs = lSTR
 End Function
 
-
-Private Function checkForSubOrFunction(tSTR As String) As Boolean
-'checks if a line item is a sub or function
-    If Left(tSTR, 3) = "Sub" Then checkForSubOrFunction = True: Exit Function
-    If Left(tSTR, 11) = "Public Sub " Then checkForSubOrFunction = True: Exit Function
-    If Left(tSTR, 12) = "Private Sub " Then checkForSubOrFunction = True: Exit Function
-    If Left(tSTR, 8) = "Function" Then checkForSubOrFunction = True: Exit Function
-    If Left(tSTR, 16) = "Public Function " Then checkForSubOrFunction = True: Exit Function
-    If Left(tSTR, 17) = "Private Function " Then checkForSubOrFunction = True: Exit Function
-    
-End Function
-
-
-Function checkForEndSubOrFunction(tSTR As String) As Boolean
-'checks for the end of a sub or function
-    If Left(tSTR, 7) = "End Sub" Then checkForEndSubOrFunction = True: Exit Function
-    If Left(tSTR, 12) = "End Function" Then checkForEndSubOrFunction = True: Exit Function
-End Function

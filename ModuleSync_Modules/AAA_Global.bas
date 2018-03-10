@@ -1,6 +1,14 @@
 Attribute VB_Name = "AAA_Global"
-Option Explicit
 
+'/T--AAA_Global--------------------------------------------------------------------\
+' Function Name       | Return  |  Description                                     |
+'---------------------|---------|--------------------------------------------------|
+'EraseExportedFolder  | Void    | erases the folder in the temp area               |
+'folderToPlaceData    | String  |  fetches the folder path to deposit module data  |
+'testdate             | Void    |                                                  |
+'\---------------------------------------------------------------------------------/
+
+Option Explicit
 
 ' allows the macro to track if the ModuleUpdater UI is open or closed.
 ' we don't want multiple Presses of the "Run Module Sync tool" button to open multiple UI's
@@ -18,8 +26,6 @@ Public Const BestModules As String = "BestModules.xlsm"
  '$-*DATE*18Jan18
  '$-*NAME*example
 
-
-
 Public Type ModuleVersionData
     A_Name As String
     B_ModulePath As String
@@ -31,7 +37,6 @@ Public Type ModuleVersionData
     G_date As String
 
     H_OldVersion As Boolean
-    I_newModule As Boolean
     J_CodeChange As Boolean
 End Type
 
@@ -40,7 +45,6 @@ Public Enum ModuleSpecies
     B_CLASS
     C_FORM
 End Enum
-
 
 Sub EraseExportedFolder()
     'erases the folder in the temp area
@@ -57,7 +61,6 @@ Function folderToPlaceData() As String
         folderToPlaceData = Environ("TEMP")
     End If
 End Function
-
 
 Sub testdate()
 

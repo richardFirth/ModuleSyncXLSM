@@ -1,10 +1,10 @@
 Attribute VB_Name = "ZZZ_CSVAndTextInteraction_2"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.9
-'$*DATE*2/28/2018*xx
+'$*MINOR_VERSION*2.0
+'$*DATE*3/2/2018*xxx
 '$*ID*CSVAndTextInteraction
-'$*CharCount*6192*xxxx
-'$*RowCount*205*xxxx
+'$*CharCount*6695*xxxx
+'$*RowCount*220*xxxx
 
 '/T--ZZZ_CSVAndTextInteraction_2----------------------------------------------------------------------------------------------------\
 ' Function Name                 | Return         |  Description                                                                     |
@@ -15,6 +15,7 @@ Attribute VB_Name = "ZZZ_CSVAndTextInteraction_2"
 'appendWrappedDataToCSV         | Boolean        |  feed stringrappers in. each stringwrapper is written as a row                   |
 'getCSVFromFile                 | String()       |  get a csv file as a string array                                                |
 'convertTXTDocumentToStringArr  | String()       |  get a text document as a string array                                           |
+'convertTXTDocumentToString     | String         |  get a text document as a string                                                 |
 'getTxTDocumentAsString         | String()       |  get a text document as a string                                                 |
 'createTextFromStringArr        | Void           |  spawns a text file containing the string array                                  |
 'createTextFromString           | Void           |  creates a text document containing a single string                              |
@@ -139,6 +140,20 @@ convertTXTDocumentToStringArr = docFeed
 
 Exit Function
 convTXTerr:
+
+End Function
+
+Function convertTXTDocumentToString(thePath As String) As String
+' get a text document as a string
+Dim theFileContents As String
+
+On Error GoTo convTXTstrerr
+theFileContents = CreateObject("Scripting.FileSystemObject").GetFile(thePath).OpenAsTextStream(ForReading, TristateUseDefault).ReadAll
+
+convertTXTDocumentToString = theFileContents
+
+Exit Function
+convTXTstrerr:
 
 End Function
 

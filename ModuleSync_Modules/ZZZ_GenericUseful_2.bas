@@ -1,24 +1,29 @@
 Attribute VB_Name = "ZZZ_GenericUseful_2"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.8
-'$*DATE*2/28/2018*xx
+'$*MINOR_VERSION*2.4
+'$*DATE*3/8/2018*xxx
 '$*ID*GenericUseful
-'$*CharCount*5314*xxxx
-'$*RowCount*182*xxxx
+'$*CharCount*7859*xxxx
+'$*RowCount*244*xxxx
 
-'/T--ZZZ_GenericUseful_2--------------------------------------------------------------\
-' Function Name         | Return  |  Description                                      |
-'-----------------------|---------|---------------------------------------------------|
-'reportError            | Void    | appends an error log to a CSV in this folder      |
-'clearWorkSpace         | Void    | clears columns beween startpoint and stop point   |
-'saveWorkbookToDesktop  | Void    | saves the given workbook to the desktop           |
-'addSheetWithName       | Void    | adds a sheet with the specific name               |
-'complexRoutineStart    | Void    | switches off stuff to allow for faster execution  |
-'endComplex             | Void    |  visible version                                  |
-'complexRoutineEnd      | Void    |  turns stuff back on                              |
-'GenerateIDcode         | String  | generates a random ID code                        |
-'readableDate           | String  | gives todays date as a string in format 7Feb18    |
-'\------------------------------------------------------------------------------------/
+'/T--ZZZ_GenericUseful_2------------------------------------------------------------------------------------\
+' Function Name         | Return  |  Description                                                            |
+'-----------------------|---------|-------------------------------------------------------------------------|
+'openFolder             | Void    |  open and display a folder                                              |
+'clearWorkSpace         | Void    | clears columns beween startpoint and stop point                         |
+'saveWorkbookToDesktop  | Void    | saves the given workbook to the desktop                                 |
+'addSheetWithName       | Void    | adds a sheet with the specific name                                     |
+'complexRoutineStart    | Void    | switches off stuff to allow for faster execution                        |
+'endComplex             | Void    |  visible version                                                        |
+'complexRoutineEnd      | Void    |  turns stuff back on                                                    |
+'hideExcelStuff         | Void    | Hides the ribbon, formula bar, statusbar, tabs, heading, and gridlines  |
+'showExcelStuff         | Void    | Shows the ribbon, formula bar, sratusbar, tabs, heading, and gridlines  |
+'GenerateIDcode         | String  | generates a random ID code                                              |
+'readableDate           | String  | gives todays date as a string in format 7Feb18                          |
+'----- Logging----------------------------------------------------------------------------------------------|
+'addToDebugLog          | Void    | appends strings to a debug log                                          |
+'reportError            | Void    | appends an error log to a CSV in this folder                            |
+'\----------------------------------------------------------------------------------------------------------/
 
 Option Explicit
 
@@ -34,16 +39,17 @@ Option Explicit
 '     something(n) = ""
 '     n = n + 1
 ' Next x
+'
+'
+' Dim theResult As Boolean
+' If MsgBox("Select Yes Or No", vbYesNo, "TITLE 1") = vbYes Then theResult = True
 
-Public Sub reportError(functionName As String, tSTR() As String)
-'appends an error log to a CSV in this folder
-Dim myErr() As String
-Dim repDat(1 To 2) As String
-repDat(1) = functionName
-repDat(2) = Now
-myErr = ConcatenateArrays(repDat, tSTR)
+Dim logFunc() As String
+Dim logMod() As String
 
-Call appendAsRowToCSV(ThisWorkbook.Path & "\errLog.csv", myErr)
+Public Sub openFolder(tFolderPath As String)
+' open and display a folder
+    Shell "explorer.exe" & " " & tFolderPath, vbNormalFocus
 End Sub
 
 Public Sub clearWorkSpace(aSheet As Worksheet, startP As Integer, stopP As Integer)
@@ -92,6 +98,28 @@ With Application
 .ScreenUpdating = True
 .Calculation = xlCalculationAutomatic
 End With
+End Sub
+
+Public Sub hideExcelStuff(nused As String)
+'Hides the ribbon, formula bar, statusbar, tabs, heading, and gridlines
+
+    Application.ExecuteExcel4Macro "SHOW.TOOLBAR(""Ribbon"",False)"
+    Application.DisplayFormulaBar = False
+    Application.DisplayStatusBar = Not Application.DisplayStatusBar
+    ActiveWindow.DisplayWorkbookTabs = False
+    ActiveWindow.DisplayHeadings = False
+    ActiveWindow.DisplayGridlines = False
+
+End Sub
+
+Public Sub showExcelStuff(nused As String)
+'Shows the ribbon, formula bar, sratusbar, tabs, heading, and gridlines
+    Application.ExecuteExcel4Macro "SHOW.TOOLBAR(""Ribbon"",True)"
+    Application.DisplayFormulaBar = True
+    Application.DisplayStatusBar = True
+    ActiveWindow.DisplayWorkbookTabs = True
+    ActiveWindow.DisplayHeadings = True
+    ActiveWindow.DisplayGridlines = True
 End Sub
 
 Public Function GenerateIDcode() As String
@@ -179,3 +207,37 @@ readableDate = currentDay & currentMonth & currentYear
 
 End Function
 
+'# Logging
+
+Public Sub addToDebugLog(functionName As String, moduleName As String)
+'appends strings to a debug log
+If Not FileThere(ThisWorkbook.Path & "\DebugLog.csv") Then
+    Dim hDat(1 To 3) As String
+    hDat(1) = "Function"
+    hDat(2) = "Module"
+    hDat(3) = ThisWorkbook.Name
+    Call appendAsRowToCSV(ThisWorkbook.Path & "\DebugLog.csv", hDat)
+End If
+
+If stringInArray(functionName, logFunc) Then
+    Exit Sub
+Else
+    logFunc = AddToStringArray(logFunc, functionName)
+End If
+Dim repDat(1 To 2) As String
+repDat(1) = functionName
+repDat(2) = moduleName
+Call appendAsRowToCSV(ThisWorkbook.Path & "\DebugLog.csv", repDat)
+
+End Sub
+
+Public Sub reportError(functionName As String, tSTR() As String)
+'appends an error log to a CSV in this folder
+Dim myErr() As String
+Dim repDat(1 To 2) As String
+repDat(1) = functionName
+repDat(2) = Now
+myErr = ConcatenateArrays(repDat, tSTR)
+
+Call appendAsRowToCSV(ThisWorkbook.Path & "\errLog.csv", myErr)
+End Sub

@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 Option Explicit
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
-    ThisWorkbook.Saved = True
+  '  ThisWorkbook.Saved = True
 End Sub
 
 Private Sub Workbook_Open()

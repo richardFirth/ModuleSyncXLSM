@@ -9,8 +9,8 @@ Attribute VB_Name = "YYY_VBAModules_1"
 '/T--YYY_VBAModules_1-------------------------------------------------------------------------------------------------------------------\
 ' Function Name                  | Return    |  Description                                                                             |
 '--------------------------------|-----------|------------------------------------------------------------------------------------------|
-'saveAllModules                  | Void      |  saves all the modules to a folder called Thisworkbook.name_Modules                      |
-'saveAllModulesFromWKBKToFolder  | Void      |  saves all modules in a wkbk to a folder.                                                |
+'~~saveAllModules                | Void      |  saves all the modules to a folder called Thisworkbook.name_Modules                      |
+'~~saveAllModulesFromWKBKToFolder| Void      |  saves all modules in a wkbk to a folder.                                                |
 'getModuleExtention              | String    |  gets the extention for a module                                                         |
 'ImportModulesToWKBK             | Boolean   | imports many modules to a workbook, given paths                                          |
 'ImportModuleToWKBK              | Boolean   |  imports one module to a workbook                                                        |
@@ -124,16 +124,16 @@ End Function
 
 Public Function RemoveModuleFromWKBKByName(theWKBK As Workbook, theModule As String) As Boolean
 'removes a module from a workbook given the name of the module
-Dim theMod As VBIDE.VBComponent
-Set theMod = getModuleByNameFromWKBK(theWKBK, theModule)
-If theMod Is Nothing Then
+Dim theMOD As VBIDE.VBComponent
+Set theMOD = getModuleByNameFromWKBK(theWKBK, theModule)
+If theMOD Is Nothing Then
     Dim info(1 To 2) As String
     info(1) = theWKBK.Name
     info(2) = theModule
     Call reportError("RemoveModuleFromWKBKByName", info)
     RemoveModuleFromWKBKByName = False: Exit Function
 End If
-RemoveModuleFromWKBKByName = RemoveModuleFromWKBK(theWKBK, theMod)
+RemoveModuleFromWKBKByName = RemoveModuleFromWKBK(theWKBK, theMOD)
 
 End Function
 

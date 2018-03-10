@@ -14,6 +14,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 Option Explicit
 
 Private myModuleCollection As ModuleVersionDataObjectsCol ' ModuleVersionDataObjectCollection object present
@@ -31,16 +33,12 @@ Public Sub initialSetup()
         Exit Sub
     End If
     
-     If Not FileThere(ThisWorkbook.Path & "\" & BestModules) Then
-        MsgBox "No " & BestModules & " exists. This file normally holds a copy of the highest version level of each modules"
-        Call complexRoutineEnd("")
-        Exit Sub
-    End If
+   '  If Not FileThere(ThisWorkbook.Path & "\" & BestModules) Then
+   '     MsgBox "No " & BestModules & " exists. This file normally holds a copy of the highest version level of each modules"
+   '     Call complexRoutineEnd("")
+   '     Exit Sub
+   ' End If
     updateTableCheckBox.Value = True
-End Sub
-
-Private Sub CommandButton5_Click()
-
 End Sub
 
 Private Sub CompareVersions_Click()
@@ -65,17 +63,7 @@ Call complexRoutineStart("")
         Call complexRoutineEnd("")
         Exit Sub
     End If
-    
-    If Not stringInArray(BestModules, namesFromPaths(thePaths)) Then
-        Dim newArr(1 To 1) As String
-        newArr(1) = ThisWorkbook.Path & "\" & BestModules
-        If Not FileThere(ThisWorkbook.Path & "\" & BestModules) Then
-            MsgBox "Can't Locate Best Modules"
-            Call complexRoutineEnd("")
-            Exit Sub
-        End If
-        totalPaths = removeDupesStringArray(ConcatenateArrays(newArr, totalPaths))
-    End If
+    totalPaths = removeDupesStringArray(totalPaths)
     
     Set myModuleCollection = createModuleObjectsCollection(totalPaths)
     Call myModuleCollection.identifyAllOldModules
@@ -95,10 +83,7 @@ If myDualListbox Is Nothing Then Exit Sub
 myDualListbox.refreshSubmenu
 End Sub
 
-
-
-
-Private Sub UpdateTables_Click()
+Private Sub updateTables_Click()
 Call complexRoutineStart("")
     If myModuleCollection Is Nothing Then MsgBox "Only use once versions are compared!": Exit Sub
 
@@ -109,9 +94,6 @@ Call complexRoutineStart("")
     
 Call complexRoutineEnd("")
 End Sub
-
-
-
 
 Private Sub useDefaultList_Click()
     
@@ -153,7 +135,6 @@ End Sub
 '   modSyncList = tPaths
 '    Call PopulateListBoxWithStringArr(ListBox1, namesFromPaths(modSyncList))
 'End Sub
-
 
 Private Sub UpdateButton_Click()
     
@@ -203,7 +184,6 @@ Private Sub RejectWKBK_Click()
     Call AcceptRejectWKBKChanges(False)
 End Sub
 
-
 Private Sub AcceptRejectModChanges(acceptCh As Boolean)
     If myModuleCollection Is Nothing Then MsgBox "Only use once versions are compared!": Exit Sub
     
@@ -247,7 +227,6 @@ Private Sub closeSequence()
     If Not StoreFilesOnDesktop Then Call EraseExportedFolder
     UI_OPEN = False
 End Sub
-
 
 Private Sub closeButton_Exit(ByVal Cancel As MSForms.ReturnBoolean)
     Call closeSequence

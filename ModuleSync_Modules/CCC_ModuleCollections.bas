@@ -1,7 +1,5 @@
 Attribute VB_Name = "CCC_ModuleCollections"
 
-
-
 '/T--CCC_ModuleCollections---------------------------------------------------------------------------------\
 ' Function Name           | Return             |  Description                                              |
 '-------------------------|--------------------|-----------------------------------------------------------|
@@ -13,10 +11,7 @@ Attribute VB_Name = "CCC_ModuleCollections"
 'ModuleCollection2String  | String()           |  feed in a module collection and get a string array       |
 '\---------------------------------------------------------------------------------------------------------/
 
-
-
 Option Explicit
-
 
 Function getAllModules(theWKBK As Workbook) As Collection
 'retrieve all modules in a workbook
@@ -28,8 +23,6 @@ Function getAllModules(theWKBK As Workbook) As Collection
     Set getAllModules = loc
 
 End Function
-
-
 
 Function getModulesByType(theWKBK As Workbook, ms As ModuleSpecies) As Collection
 ' get all the modules of a certain type within a workbook
@@ -51,8 +44,6 @@ Function getModulesByType(theWKBK As Workbook, ms As ModuleSpecies) As Collectio
         
 End Function
 
-
-
 Function getModuleByName(theCol As Collection, moduleName As String) As VBIDE.VBComponent
 ' retrieves a reference to a module object given a name
     Dim locMod As VBIDE.VBComponent
@@ -65,8 +56,6 @@ Function getModuleByName(theCol As Collection, moduleName As String) As VBIDE.VB
     
 End Function
 
-
-
 Function getModuleByNameFromWKBK(theWKBK As Workbook, moduleName As String) As VBIDE.VBComponent
 ' for a given workbook and modulename, get the module
     Dim modCol As Collection
@@ -75,11 +64,6 @@ Function getModuleByNameFromWKBK(theWKBK As Workbook, moduleName As String) As V
     Set getModuleByNameFromWKBK = getModuleByName(modCol, moduleName)
     
 End Function
-
-
-
-
-
 
 Function combineCollections(col1 As Collection, col2 As Collection) As Collection
 ' combine two collections into 1
@@ -97,9 +81,6 @@ Function combineCollections(col1 As Collection, col2 As Collection) As Collectio
     
 End Function
 
-
-
-
 Function ModuleCollection2String(theCollection As Collection) As String()
 ' feed in a module collection and get a string array
     Dim VBComp As VBIDE.VBComponent
@@ -113,5 +94,4 @@ Function ModuleCollection2String(theCollection As Collection) As String()
     Next VBComp
     ModuleCollection2String = locSTR
 End Function
-
 
