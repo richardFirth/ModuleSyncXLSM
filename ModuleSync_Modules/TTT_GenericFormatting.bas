@@ -13,7 +13,7 @@ Option Explicit
 
 Public Function getReturnType(tFDec As String) As String
 ' gets the return type for a function
-    If InStr(1, tFDec, "Function", vbBinaryCompare) > 0 Then
+    If InStr(1, tFDec, "Function ", vbBinaryCompare) > 0 Or InStr(1, tFDec, " Get ", vbBinaryCompare) > 0 Then
         Dim strG() As String
         strG = Split(tFDec, " ")
         getReturnType = strG(UBound(strG))
@@ -26,11 +26,9 @@ Public Function getFunctionName(tFDec As String) As String
 ' gets the name of a function or sub ' used many places!
     Dim SPL1() As String
     SPL1 = Split(tFDec, "(")
-        
     Dim strG() As String
     strG = Split(SPL1(0), " ")
     getFunctionName = strG(UBound(strG))
-   
 End Function
 
 Public Function checkForSubOrFunction(tSTR As String) As Boolean
@@ -42,10 +40,15 @@ Public Function checkForSubOrFunction(tSTR As String) As Boolean
     If Left(Trim(tSTR), 16) = "Public Function " Then checkForSubOrFunction = True: Exit Function
     If Left(Trim(tSTR), 17) = "Private Function " Then checkForSubOrFunction = True: Exit Function
     
+    If Left(Trim(tSTR), 15) = "Public Property" Then checkForSubOrFunction = True: Exit Function
+    If Left(Trim(tSTR), 8) = "Property" Then checkForSubOrFunction = True: Exit Function
 End Function
 
 Public Function checkForEndSubOrFunction(tSTR As String) As Boolean
 'checks for the end of a sub or function
     If Left(Trim(tSTR), 7) = "End Sub" Then checkForEndSubOrFunction = True: Exit Function
     If Left(Trim(tSTR), 12) = "End Function" Then checkForEndSubOrFunction = True: Exit Function
+    If Left(Trim(tSTR), 12) = "End Property" Then checkForEndSubOrFunction = True: Exit Function
+    
+    
 End Function

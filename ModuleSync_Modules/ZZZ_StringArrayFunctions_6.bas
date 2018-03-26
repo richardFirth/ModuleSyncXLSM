@@ -1,17 +1,17 @@
 Attribute VB_Name = "ZZZ_StringArrayFunctions_6"
 '$VERSIONCONTROL
-'$*MINOR_VERSION*1.9
-'$*DATE*3/9/2018*xxx
+'$*MINOR_VERSION*2.1
+'$*DATE*3/13/2018*xx
 '$*ID*StringArrayFunctions
-'$*CharCount*10518*xxx
-'$*RowCount*327*xxxx
+'$*CharCount*10583*xxx
+'$*RowCount*328*xxxx
 
 '/T--ZZZ_StringArrayFunctions_6-------------------------------------------------------------------\
 ' Function Name            | Return    |  Description                                             |
 '--------------------------|-----------|----------------------------------------------------------|
 'ConcatenateArrays         | String()  | concatentates two string arrays                          |
 'insertString              | String()  |  inserts a string into a string array                    |
-'insertArray               | String()  | inserts one string array into another at a location      |
+'insertArray               | String()  | concatentates two string arrays                          |
 'AddToStringArray          | String()  | add to string array                                      |
 'arrayHasStuff             | Boolean   | returns false when array is not initialized with data    |
 'stringInArray             | Boolean   | is the string found in the array                         |
@@ -22,7 +22,6 @@ Attribute VB_Name = "ZZZ_StringArrayFunctions_6"
 'getArrayFromColumn        | String()  | puts all values in column to array                       |
 '----- Set functions------------------------------------------------------------------------------|
 'isSubset                  | Boolean   | returns true if all values are found                     |
-'newStrings                | String()  | returns strings in newset that are not in oldset         |
 'DifferenceBetweenSets     | String()  | returns strings in newset that are not in oldset         |
 'intersectionOfStrings     | String()  | returns strings present in both arrays                   |
 '----- Formatting strings-------------------------------------------------------------------------|
@@ -66,7 +65,7 @@ Public Function insertString(theTarget() As String, theSTR As String, afterPosit
 End Function
 
 Public Function insertArray(theTarget() As String, toInsert() As String, afterPosition As Long) As String()
-'inserts one string array into another at a location
+'concatentates two string arrays
 Dim newArr() As String
 Dim n As Long: n = 1
 
@@ -193,12 +192,6 @@ For x = LBound(subSET) To UBound(subSET)
     If Not stringInArray(subSET(x), superset) Then isSubset = False: Exit Function
 Next x
 isSubset = True
-End Function
-
-Public Function newStrings(oldSet() As String, newSet() As String) As String()
-'returns strings in newset that are not in oldset
-MsgBox "Depreciated"
-newStrings = setDifference(newSet, oldSet)
 End Function
 
 Public Function DifferenceBetweenSets(mainSet() As String, subtractThis() As String) As String()

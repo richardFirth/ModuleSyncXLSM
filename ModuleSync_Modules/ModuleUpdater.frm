@@ -24,7 +24,6 @@ Private myDualListbox As UIUX_DualListBox_1
 Private modSyncList() As String ' list of modules to sync
 
 Public Sub initialSetup()
-    
     If Not FileThere(ThisWorkbook.Path & "\ModSyncList.txt") Then
         MsgBox "No Default list exists, creating example in this folder to get you started"
         Dim exampleData(1 To 1) As String: exampleData(1) = ThisWorkbook.Path & "\" & BestModules
@@ -32,7 +31,6 @@ Public Sub initialSetup()
         Call complexRoutineEnd("")
         Exit Sub
     End If
-    
    '  If Not FileThere(ThisWorkbook.Path & "\" & BestModules) Then
    '     MsgBox "No " & BestModules & " exists. This file normally holds a copy of the highest version level of each modules"
    '     Call complexRoutineEnd("")
@@ -46,36 +44,29 @@ Private Sub CompareVersions_Click()
 End Sub
 
 Private Sub compareWithVersons(thePaths() As String)
-
     If Not arrayHasStuff(thePaths) Then
         Dim errMessage(1 To 1) As String
         errMessage(1) = "No Modules to Sync"
         Call PopulateListBoxWithStringArr(ListBox1, errMessage)
         Exit Sub
     End If
-
 Call complexRoutineStart("")
     Dim totalPaths() As String
     totalPaths = thePaths
-    
     If stringInArray(ThisWorkbook.Name, namesFromPaths(thePaths)) Then
         MsgBox "Can't Run on self"
         Call complexRoutineEnd("")
         Exit Sub
     End If
     totalPaths = removeDupesStringArray(totalPaths)
-    
     Set myModuleCollection = createModuleObjectsCollection(totalPaths)
     Call myModuleCollection.identifyAllOldModules
     Call myModuleCollection.displayHeaderObjectData(ThisWorkbook.Sheets("VersionControl"))
     Set myDualListbox = New UIUX_DualListBox_1
     Call myDualListbox.initializeDualList(ListBox1, ListBox2)
     Call refreshListBoxes
-    
     UpdateButton.Enabled = True
-    
 Call complexRoutineEnd("")
-    
 End Sub
 
 Private Sub ListBox1_Click()
@@ -86,17 +77,14 @@ End Sub
 Private Sub updateTables_Click()
 Call complexRoutineStart("")
     If myModuleCollection Is Nothing Then MsgBox "Only use once versions are compared!": Exit Sub
-
     Dim tHL1() As String
     tHL1 = getSelectedItemsFromListBox(ListBox1)
     If Not arrayHasStuff(tHL1) Then MsgBox "No Module Selected": Exit Sub
     Call myModuleCollection.UpdateTablesInWKBK(tHL1(1))
-    
 Call complexRoutineEnd("")
 End Sub
 
 Private Sub useDefaultList_Click()
-    
     If Not FileThere(ThisWorkbook.Path & "\ModSyncList.txt") Then
         MsgBox "No Default list exists, creating example in this folder to get you started"
         Dim exampleData(1 To 1) As String: exampleData(1) = ThisWorkbook.Path & "\" & BestModules
@@ -104,13 +92,10 @@ Private Sub useDefaultList_Click()
         Exit Sub
         Call complexRoutineEnd("")
     End If
-    
     modSyncList = CleanArray(convertTXTDocumentToStringArr(ThisWorkbook.Path & "\ModSyncList.txt"))
     modSyncList = removeBlanksFromArray(modSyncList) ' in case there's an extra enter at end of txt file
     Dim filePresent() As String
-    
     Dim x As Integer
-
     For x = LBound(modSyncList) To UBound(modSyncList)
         ReDim Preserve filePresent(1 To x) As String
         If Not FileThere(modSyncList(x)) Then
@@ -120,13 +105,9 @@ Private Sub useDefaultList_Click()
         Else
             filePresent(x) = " " ' need a blank space to show up in list box
         End If
-        
     Next x
-
-    
     Call PopulateListBoxWithStringArr(ListBox1, namesFromPaths(modSyncList))
     Call PopulateListBoxWithStringArr(ListBox2, filePresent)
-
 End Sub
 
 'Private Sub BrowseTo_Click()
@@ -137,7 +118,6 @@ End Sub
 'End Sub
 
 Private Sub UpdateButton_Click()
-    
 Call complexRoutineStart("")
  If Not myModuleCollection Is Nothing Then
         myModuleCollection.updateToLatestVersions
@@ -146,9 +126,7 @@ Call complexRoutineStart("")
  Else
     MsgBox "Header Data Not Initialized"
  End If
- 
 Call complexRoutineEnd("")
- 
 End Sub
 
 Private Sub refreshListBoxes()
@@ -158,7 +136,6 @@ Private Sub refreshListBoxes()
     For y = LBound(totN) To UBound(totN)
         Call myDualListbox.AddToListBoxMenu(myModuleCollection.makeModuleDisplayByWKBK(totN(y)), totN(y))
     Next
-    
     myDualListbox.displayData
 End Sub
 
@@ -186,21 +163,17 @@ End Sub
 
 Private Sub AcceptRejectModChanges(acceptCh As Boolean)
     If myModuleCollection Is Nothing Then MsgBox "Only use once versions are compared!": Exit Sub
-    
     Dim tHL2() As String
     tHL2 = getSelectedItemsFromListBox(ListBox2)
     If Not arrayHasStuff(tHL2) Then MsgBox "No Module Selected": Exit Sub
-    
     Dim tHL1() As String
     tHL1 = getSelectedItemsFromListBox(ListBox1)
-    
     Call myModuleCollection.acceptRejectChangesInModule(tHL1(1), tHL2(1), acceptCh)
     Call refreshListBoxes
 End Sub
 
 Private Sub AcceptRejectWKBKChanges(acceptCh As Boolean)
     If myModuleCollection Is Nothing Then MsgBox "Only use once versions are compared!": Exit Sub
-
     Dim tHL1() As String
     tHL1 = getSelectedItemsFromListBox(ListBox1)
     If Not arrayHasStuff(tHL1) Then MsgBox "No Module Selected": Exit Sub

@@ -17,10 +17,10 @@ Option Explicit
 ' Function Name                   | Return                      |  Description                                                                                  |
 '---------------------------------|-----------------------------|-----------------------------------------------------------------------------------------------|
 '----- Setters and getters--------------------------------------------------------------------------------------------------------------------------------------|
-'setModulesFolderPath             | Void                        | odulesFolderPath = thePath                                                                    |
-'setWKBKPath                      | Void                        | KBKPath = thePath                                                                             |
-'setModulePaths                   | Void                        | odulePaths = thePaths                                                                         |
-'getMySingleModules               | Collection                  | et getMySingleModules = mySingleModules                                                       |
+'setModulesFolderPath             | Void                        |  sets the modules folder path                                                                 |
+'setWKBKPath                      | Void                        |  sets the workbook path                                                                       |
+'setModulePaths                   | Void                        |  sets the module paths                                                                        |
+'getMySingleModules               | Collection                  |  retrieves the collection of modules                                                          |
 'refreshModuleDataFromTXT         | refreshModuleDataFromTXT()  |  refreshes the module data from the text files                                                |
 'getLatestModuleData              | ModuleVersionData()         |  gets module version data for each module                                                     |
 'getWKBKPath                      | String                      |  gets the workbook path                                                                       |
@@ -38,6 +38,7 @@ Option Explicit
 'acceptRejectSingleModuleChanges  | Void                        |  accept or reject changes within a single module                                              |
 'acceptRejectAllModuleChanges     | Void                        |  accept or reject all module changes                                                          |
 'updateAllTables                  | Void                        |  updates all the tables in all the modules                                                    |
+'removeGapsFromfunctions          | Void                        |  removes gaps from functions in module                                                        |
 'updateLogFunctions               | Boolean)                    |  updates all the Log Functions in all the modules                                             |
 '----- UI/UX methods--------------------------------------------------------------------------------------------------------------------------------------------|
 'makeModuleDisplay                | String()                    |  makes a display                                                                              |
@@ -66,18 +67,22 @@ Private outPutcolumn As Integer
 ' \===========================/
 
 Public Sub setModulesFolderPath(thePath As String)
+' sets the modules folder path
 modulesFolderPath = thePath
 End Sub
 
 Public Sub setWKBKPath(thePath As String)
+' sets the workbook path
 WKBKPath = thePath
 End Sub
 
 Public Sub setModulePaths(thePaths() As String)
+' sets the module paths
 modulePaths = thePaths
 End Sub
 
 Public Function getMySingleModules() As Collection
+' retrieves the collection of modules
     Set getMySingleModules = mySingleModules
 End Function
 
@@ -92,14 +97,12 @@ End Function
 Public Function getLatestModuleData() As ModuleVersionData()
 ' gets module version data for each module
     Dim myData() As ModuleVersionData
-    
     Dim Smod As X_SingleModuleObject_1
     For Each Smod In mySingleModules
         Dim sDat(1 To 1) As ModuleVersionData
         sDat(1) = Smod.getMyModuleVersionData()
         myData = ConcatenateModuleVersionData(myData, sDat)
     Next Smod
-    
     getLatestModuleData = myData
 End Function
 
@@ -111,7 +114,6 @@ End Function
 Public Function getModuleDataByName(tName As String) As X_SingleModuleObject_1
 ' retrieve a moduleObject by it's name
     Dim aMod As X_SingleModuleObject_1
-    
     For Each aMod In mySingleModules
         ' compensate for modulename having extention on it
         If aMod.getModuleName = tName Then Set getModuleDataByName = aMod: Exit Function
@@ -121,7 +123,6 @@ End Function
 Public Sub setSingleModules(theMods As Collection)
 ' set the collection of single modules
     Set mySingleModules = theMods
-    
 End Sub
 
 ' /===========================\
@@ -158,8 +159,6 @@ Public Function getIDS() As String()
     Dim tID() As String
     Dim x As Integer
     Dim n As Integer: n = 1
-    
-    
     Dim Smod As X_SingleModuleObject_1
     For Each Smod In mySingleModules
         If Smod.isVersionControl Then
@@ -168,24 +167,19 @@ Public Function getIDS() As String()
             n = n + 1
         End If
     Next Smod
-    
     getIDS = tID
-    
 End Function
 
 '# Module Modification
 
 Public Sub updateToNewest()
 ' opens the workbook and replaces all old modules with new ones
-
 If Not oldVersionsFlagged Then Exit Sub
-
 Debug.Print "A"
-
 Dim hasChanged As Boolean
+Application.EnableEvents = False ' stop workbook from triggering setup macros
 Dim myWKBK As Workbook: Set myWKBK = Workbooks.Open(WKBKPath)
 Dim importError As Boolean
-
 Dim Smod As X_SingleModuleObject_1
 For Each Smod In mySingleModules
     If Smod.isOldVersion Then
@@ -204,6 +198,7 @@ If importError Then
 Else
     Call myWKBK.Close(hasChanged)
 End If
+Application.EnableEvents = True ' renable workbooks triggering setup macros
 End Sub
 
     
@@ -215,31 +210,29 @@ For x = LBound(myNewestData) To UBound(myNewestData)
 Next x
 End Function
 
-' /====================================================\
+
 '#Module Modification - reset change detection
-' \====================================================/
 
 Public Sub commitChangesInAllModuleObjects()
-' updates the m
+' updates the modules in the workbook to reflect all edits made
     Dim WKBKhasChanged As Boolean
+    Application.EnableEvents = False ' stop workbook from triggering setup macros
     Dim myWKBK As Workbook:    Set myWKBK = Workbooks.Open(WKBKPath)
-    
     Dim problem As Boolean
     Dim tModule As X_SingleModuleObject_1
-    
     For Each tModule In mySingleModules
         If RemoveModuleFromWKBKByName(myWKBK, tModule.getModuleName) Then
            If Not ImportModuleToWKBK(myWKBK, tModule.getModulePath) Then problem = True
            WKBKhasChanged = True
         End If
     Next tModule
-    
     If problem Then
         Call myWKBK.Close(False)
         Debug.Print "Problem"
     Else
         Call myWKBK.Close(WKBKhasChanged)
     End If
+        Application.EnableEvents = True ' renable workbooks triggering setup macros
 End Sub
 
 Public Sub acceptRejectSingleModuleChanges(tName As String, accept As Boolean)
@@ -248,6 +241,7 @@ Public Sub acceptRejectSingleModuleChanges(tName As String, accept As Boolean)
     Set tModule = getModuleDataByName(tName)
     Dim hasChanged As Boolean
     Dim myWKBK As Workbook
+    Application.EnableEvents = False ' stop workbook from triggering setup macros
     Set myWKBK = Workbooks.Open(WKBKPath)
     If RemoveModuleFromWKBKByName(myWKBK, tModule.getModuleName) Then
        If accept Then
@@ -259,11 +253,12 @@ Public Sub acceptRejectSingleModuleChanges(tName As String, accept As Boolean)
          Call tModule.pushBackVersion
          Call tModule.saveModule
      End If
-
       Call ImportModuleToWKBK(myWKBK, tModule.getModulePath)
       hasChanged = True
    End If
 Call myWKBK.Close(hasChanged)
+Application.EnableEvents = True ' renable workbooks triggering setup macros
+
 End Sub
 
 Public Sub acceptRejectAllModuleChanges(accept As Boolean)
@@ -275,46 +270,42 @@ For Each tModule In mySingleModules
            Call tModule.z_updateTable
            Call tModule.z_removeDoubleGaps
            Call tModule.acceptAsLatestVersion
-           Call tModule.saveModule
         Else
            Call tModule.pushBackVersion
-           Call tModule.saveModule
         End If
+            Call tModule.saveModule
     End If
 Next tModule
 Me.commitChangesInAllModuleObjects
-
 End Sub
 
 Public Sub updateAllTables()
 ' updates all the tables in all the modules
 Dim tModule As X_SingleModuleObject_1
 For Each tModule In mySingleModules
-    Call tModule.z_updateTable
-    Call tModule.z_removeDoubleGaps
-    Call tModule.saveModule
+    If Not tModule.isVersionControl Then
+        Call tModule.z_updateTable
+        Call tModule.z_removeDoubleGaps
+        Call tModule.saveModule
+    End If
 Next tModule
 Me.commitChangesInAllModuleObjects
-
 End Sub
 
 Public Sub removeGapsFromfunctions()
 ' removes gaps from functions in module
 Dim tModule As X_SingleModuleObject_1
 For Each tModule In mySingleModules
-    Call tModule.z_removeGapsInFunctions
-    Call tModule.saveModule
+    If Not tModule.isVersionControl Then
+        Call tModule.z_removeGapsInFunctions
+        Call tModule.saveModule
+    End If
 Next tModule
 Me.commitChangesInAllModuleObjects
-
 End Sub
-
-
-
 
 Public Sub updateLogFunctions(addLogs As Boolean)
 ' updates all the Log Functions in all the modules
-
 Dim tModule As X_SingleModuleObject_1
 For Each tModule In mySingleModules
     If addLogs Then
@@ -325,7 +316,6 @@ For Each tModule In mySingleModules
     Call tModule.saveModule
 Next tModule
 Me.commitChangesInAllModuleObjects
-
 End Sub
 
 ' /===========================\
@@ -337,7 +327,6 @@ Public Function makeModuleDisplay() As String()
     Dim x As Integer
     Dim n As Integer: n = 1
     Dim tResult() As String
-            
 Dim Smod As X_SingleModuleObject_1
 For Each Smod In mySingleModules
     If Smod.isVersionControl And Smod.isCodeChange Then
@@ -346,20 +335,16 @@ For Each Smod In mySingleModules
         n = n + 1
     End If
 Next Smod
-        
 makeModuleDisplay = tResult
-
 End Function
 
     
 Private Function getNumberOfCodeChangeModules() As Integer
 ' gets count of modules for whichcode has changed
-
 Dim tCount As Integer
 For Each Smod In mySingleModules
     If Smod.isCodeChange Then tCount = tCount + 1
 Next Smod
-    
 getNumberOfCodeChangeModules = tCount
 End Function
     
@@ -394,7 +379,6 @@ Public Sub reprintMyData()
     .Cells(outPutRow, outPutcolumn + 4).Value = "ID"
     .Cells(outPutRow, outPutcolumn + 5).Value = "Date"
     .Range(.Cells(outPutRow, outPutcolumn), .Cells(outPutRow, outPutcolumn + 5)).Interior.Color = getRFColor(T_Grey)
-     
         Dim Smod As X_SingleModuleObject_1
         For Each Smod In mySingleModules
              .Cells(n, outPutcolumn).Value = Smod.getModuleName
@@ -406,10 +390,8 @@ Public Sub reprintMyData()
              If Smod.isVersionControl Then .Range(.Cells(n, outPutcolumn), .Cells(n, outPutcolumn + 5)).Interior.Color = getRFColor(B_Green)
              If Smod.isCodeChange Then .Range(.Cells(n, outPutcolumn), .Cells(n, outPutcolumn + 5)).Interior.Color = getRFColor(C_Yellow)
              If Smod.isOldVersion Then .Range(.Cells(n, outPutcolumn), .Cells(n, outPutcolumn + 5)).Interior.Color = getRFColor(A_Red)
-                
              n = n + 1
         Next Smod
-     
     End With
 End Sub
 

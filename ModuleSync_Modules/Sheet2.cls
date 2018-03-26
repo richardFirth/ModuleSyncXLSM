@@ -11,7 +11,7 @@ Option Explicit
 
 Private Sub CommandButton1_Click()
 
-UserForm1.Show
+AutoFormatter.Show
 
 End Sub
 

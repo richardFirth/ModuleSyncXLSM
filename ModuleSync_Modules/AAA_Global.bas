@@ -5,7 +5,7 @@ Attribute VB_Name = "AAA_Global"
 '---------------------|---------|--------------------------------------------------|
 'EraseExportedFolder  | Void    | erases the folder in the temp area               |
 'folderToPlaceData    | String  |  fetches the folder path to deposit module data  |
-'testdate             | Void    |                                                  |
+'testdate             | Void    | im dTest As String: dTest = "11Feb2018"          |
 '\---------------------------------------------------------------------------------/
 
 Option Explicit
@@ -50,7 +50,6 @@ Sub EraseExportedFolder()
     'erases the folder in the temp area
     Dim tFolder As String: tFolder = folderToPlaceData & "\ModuleSyncOutput"
     If FolderThere(tFolder) Then Call DeleteFolderTreeRF(tFolder)
-    
 End Sub
 
 Function folderToPlaceData() As String
@@ -63,11 +62,7 @@ Function folderToPlaceData() As String
 End Function
 
 Sub testdate()
-
 Dim dTest As String: dTest = "11Feb2018"
-
  '   Dim bestDate As Date: bestDate = DateValue(dTest)
-
     MsgBox Date
-
 End Sub

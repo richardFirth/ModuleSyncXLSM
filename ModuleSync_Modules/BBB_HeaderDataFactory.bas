@@ -13,10 +13,8 @@ Option Explicit
 
 Function createModuleObjectsCollection(tPaths() As String) As ModuleVersionDataObjectsCol
 'factory function for theModuleVersionDataObjects collection
-
 Dim locHDat As New ModuleVersionDataObjectsCol
 Dim locCol As New Collection
-
 Dim aWKBK As Workbook
     Call createDirectoryRF(folderToPlaceData & "\ModuleSyncOutput") ' to allow output to all me in the module sync
     Dim theFolderPath As String: theFolderPath = folderToPlaceData & "\ModuleSyncOutput\Modules_"
@@ -24,14 +22,15 @@ Dim aWKBK As Workbook
     For x = LBound(tPaths) To UBound(tPaths)
         Dim otherWKBKHeaders As ModuleVersionDataObject
         If FileThere(tPaths(x)) Then
+            Application.EnableEvents = False ' stop macros triggering when the workbook opens
             Set aWKBK = Workbooks.Open(tPaths(x))
             Dim theFileName As String: theFileName = Left(nameFromPath(tPaths(x)), Len(nameFromPath(tPaths(x))) - 5)
             Set otherWKBKHeaders = createModuleHeaderObjectFromWKBK(aWKBK, theFolderPath & theFileName) ' factory function for ModuleVersionDataObject
             Call locCol.Add(otherWKBKHeaders)
             Call aWKBK.Close(False)
+            Application.EnableEvents = True ' stop macros triggering when the workbook opens
         End If
     Next x
-
 Call locHDat.setModuleVersionDataObjects(locCol)
 Set createModuleObjectsCollection = locHDat ' return newly created object
 End Function
@@ -42,35 +41,29 @@ Function createModuleHeaderObjectFromWKBK(theWKBK As Workbook, theFolderName As 
     Dim thisCollection As Collection
     Set thisCollection = getAllModules(theWKBK)
     Dim modulePaths() As String
-    
     If Not FolderThere(theFolderName) Then ' make sure folder creation is possible
         If Not createDirectoryRF(theFolderName) Then GoTo createModuleHeaderObjectFromWKBKErr
     End If
-    
     modulePaths() = ExportVBAModulesToPaths(thisCollection, theFolderName)
     Dim singleModcollection As New Collection
     Dim x As Integer
     Dim singleModObj As X_SingleModuleObject_1
-    
     For x = LBound(modulePaths) To UBound(modulePaths)
         Set singleModObj = New X_SingleModuleObject_1
         Call singleModObj.initializeModule(modulePaths(x))
         Call singleModcollection.Add(singleModObj)
     Next x
-    
     Call myHData.setSingleModules(singleModcollection)
     Call myHData.setWKBKPath(theWKBK.Path & "\" & theWKBK.Name)
     Call myHData.setModulesFolderPath(theFolderName)
     Call myHData.setModulePaths(modulePaths)
     Set createModuleHeaderObjectFromWKBK = myHData
-    
 Exit Function
 createModuleHeaderObjectFromWKBKErr:
     Dim tERR(1 To 2) As String
     tERR(1) = theFolderName
     tERR(2) = "Folder create error"
    Call reportError("createModuleHeaderObjectFromWKBK", tERR)
-    
 End Function
 
 Public Function ConcatenateModuleVersionData(theArray1() As ModuleVersionData, theArray2() As ModuleVersionData) As ModuleVersionData()
